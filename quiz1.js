@@ -1,26 +1,5 @@
 const docRef = db.collection('quizes').doc('mI7FH4zvco1P92ChrFDF');
 
-function drawPieChart(scores) {
-  var ctx = document.getElementById('ScoresInPieChart').getContext('2d');
-  data = {
-  datasets: [{
-    data: [scores.authoritarian, scores.democratic, scores.laissezFaire],
-    backgroundColor: ['#EC407A', '#42A5F5', '#26A69A'],
-  }],
-  // These labels appear in the legend and in the tooltips when hovering different arcs
-  labels: [
-      'Authoritarian',
-      'Democratic',
-      'Laissez-Faire'
-    ]
-  };
-
-  var myPieChart = new Chart(ctx,{
-      type: 'pie',
-      data: data,
-  });
-}
-
 Vue.component('question-section', {
   props: ['question'],
   methods: {
@@ -62,20 +41,23 @@ var questions = new Vue({
         message: null
       }
     },
-    attempts: 0
+    attempts: 0,
+    pieChart: null
   },
   mounted () {
     this.retrieveQuestionsFromDB();
   },
   methods: {
     generateResult: function() {
-      this.attempts++;
+      const resultsSection = document.getElementById("results");
+      resultsSection.style.padding='50px 0';
       this.resetValidation();
       this.validateStudentName();
       this.validateStudentEmail();
       if (!this.errors.questions.hasError && !this.errors.name.hasError && !this.errors.email.hasError) {
+        this.attempts++;
         const scores = this.calculateScore();
-        drawPieChart(scores);
+        // createPieChart(scores);
         // get object key of item with max value
         let resultTitle = Object.keys(scores).reduce(function(a, b){ return scores[a] > scores[b] ? a : b })
         if (resultTitle === 'laissezFaire') resultTitle = 'laissez-faire';
@@ -86,7 +68,13 @@ var questions = new Vue({
         }
         
         goToAnchor('#results');
-        this.addToDB();
+        console.log(scores)
+        if (!this.pieChart) {
+          this.createPieChart(scores); 
+        } else {
+          this.updatePieChart(scores);
+        }
+        // this.addToDB();
       }
     },
   	calculateScore: function() {
@@ -180,6 +168,28 @@ var questions = new Vue({
         this.dbRequest.hasError = true;
       })
       .finally(() => this.dbRequest.isLoading = false)
+    },
+    createPieChart: function(scores) {
+      const myfirstchart = document.getElementById("myfirstchart");
+      myfirstchart.style.height='50vh';
+      this.pieChart = new Morris.Donut({
+        // ID of the element in which to draw the chart.
+        element: 'myfirstchart',
+        data: [
+          { label: 'Laissez-Faire', value: scores.laissezFaire },
+          { label: 'Democratic', value: scores.democratic },
+          { label: 'Authoritarian', value: scores.authoritarian }
+        ],
+        colors: ['#EC407A', '#42A5F5', '#26A69A'],
+        resize: true,
+      });
+    },
+    updatePieChart: function(scores) {
+      this.pieChart.setData([
+          { label: 'Laissez-Faire', value: scores.laissezFaire },
+          { label: 'Democratic', value: scores.democratic },
+          { label: 'Authoritarian', value: scores.authoritarian }
+        ])
     }
   }
 })
