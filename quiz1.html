@@ -128,19 +128,8 @@
           <h2 class="subtitle has-text-white">
             Please input the following identity information to generate your results. The results will also be emailed to you.
           </h2>
-          <div class="field is-horizontal is-grouped">
+          <div class="field is-horizontal is-grouped ">
             <div class="field-body">
-              <div class="field">
-                <p class="control is-expanded has-icons-left">
-                  <input class="input is-medium" :class="{ 'is-danger': errors.name.hasError }" type="text" placeholder="Full Name" v-model="student.name">
-                  <span class="icon is-normal is-left">
-                    <i class="fas fa-user"></i>
-                  </span>
-                </p>
-                <p v-if="errors.name.hasError" class="help is-danger">
-                  {{ errors.name.message }}
-                </p>
-              </div>
               <div class="field">
                 <p class="control is-expanded has-icons-left has-icons-right">
                   <input class="input is-medium" :class="{ 'is-danger': errors.email.hasError }" type="email" placeholder="NUS Email" v-model="student.email">
@@ -169,7 +158,7 @@
       </section>
 
       <section id="results">
-        <div class="container has-text-centered" v-show="attempts > 0 && !errors.questions.hasError && !errors.name.hasError && !errors.email.hasError">
+        <div class="container has-text-centered" v-show="attempts > 0 && !errors.questions.hasError && !errors.email.hasError">
           <h1 class="subtitle is-4">Your Leadership Communication Style:</h1>
           <h1 class="title is-1 is-capitalized">{{ results.title }}</h1>
           <br />

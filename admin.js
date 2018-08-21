@@ -34,7 +34,7 @@ var app = new Vue({
 	    })
 	    .finally(() => {
 	    	this.dbRequest.isLoading = false;
-	    	this.dbRequest.queriedAt = moment().format('Do MMM (ddd), h:mm:ss a');
+	    	this.dbRequest.queriedAt = moment().format('h:mm:ss a');
 	    });
   	}
   },

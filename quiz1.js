@@ -18,7 +18,7 @@ var questions = new Vue({
       hasError: false
     },
     questionList: [],
-  	student: { name: null, email: null },
+  	student: { email: null },
     results: {
       title: null,
       score: {
@@ -29,10 +29,6 @@ var questions = new Vue({
     },
     errors: {
       questions: {
-        hasError: false,
-        message: null
-      },
-      name: {
         hasError: false,
         message: null
       },
@@ -52,9 +48,8 @@ var questions = new Vue({
       const resultsSection = document.getElementById("results");
       resultsSection.style.padding='50px 0';
       this.resetValidation();
-      this.validateStudentName();
       this.validateStudentEmail();
-      if (!this.errors.questions.hasError && !this.errors.name.hasError && !this.errors.email.hasError) {
+      if (!this.errors.questions.hasError && !this.errors.email.hasError) {
         this.attempts++;
         const scores = this.calculateScore();
         // createPieChart(scores);
@@ -103,21 +98,13 @@ var questions = new Vue({
       this.errors.questions.message = notAnswered.length === 0 ? null : "The following statements have not been answered: " + notAnswered.join(', ');
       return scores;
   	},
-    validateStudentName: function() {
-      if(!this.student.name) {
-        this.errors.name.hasError = true;
-        this.errors.name.message = "This field is required";
-      } else {
-        this.student.name = toTitleCase(this.student.name);
-      }
-    },
     validateStudentEmail: function() {
       const email = this.student.email;
 
       if(!email) {
         this.errors.email.hasError = true;
         this.errors.email.message = "This field is required";
-      } else if (email.charAt(8) !== '@' || !email.toLowerCase().endsWith("@u.nus.edu")) {
+      } else if (!email.toLowerCase().endsWith("@u.nus.edu")) {
         this.errors.email.hasError = true;
         this.errors.email.message = "Please enter a valid NUS email address. Example: <NUSNetID>@u.nus.edu";
       } else {
@@ -127,8 +114,6 @@ var questions = new Vue({
     resetValidation: function() {
       this.errors.questions.hasError = false;
       this.errors.questions.message = null;
-      this.errors.name.hasError = false;
-      this.errors.name.message = null;
       this.errors.email.hasError = false;
       this.errors.email.message = null;
     },

@@ -69,7 +69,7 @@
           </div>
           <div class="column is-narrow has-text-right">
             <button class="button is-large is-info" @click="retrieveResponsesFromDB">Refresh Data</button>
-            <p>Last queried: {{ dbRequest.queriedAt }}</p>
+            <p class="subtitle is-7">Last queried: {{ dbRequest.queriedAt }}</p>
           </div>
         </div>
         <br />
@@ -78,8 +78,7 @@
         <table class="table is-hoverable is-fullwidth is-striped animate-bottom">
           <thead>
             <tr>
-              <th class="is-hidden-mobile">Email</th>
-              <th>Name</th>
+              <th>Email</th>
               <th>Result</th>
               <th class="is-hidden-mobile">Authoritarian</th>
               <th class="is-hidden-mobile">Democratic</th>
@@ -89,9 +88,8 @@
           </thead>
           <tbody>
             <tr v-for="response in responses">
-              <td class="is-hidden-mobile">{{ response.student.email }}</td>
-              <td>{{ response.student.name }}</td>
-              <td>{{ response.results.title }}</td>
+              <td>{{ response.student.email }}</td>
+              <td class="is-capitalized">{{ response.results.title }}</td>
               <td class="is-hidden-mobile">{{ response.results.scores.authoritarian }}</td>
               <td class="is-hidden-mobile">{{ response.results.scores.democratic }}</td>
               <td class="is-hidden-mobile">{{ response.results.scores.laissezFaire }}</td>
