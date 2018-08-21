@@ -74,7 +74,7 @@ var questions = new Vue({
         } else {
           this.updatePieChart(scores);
         }
-        // this.addToDB();
+        this.addToDB();
       }
     },
   	calculateScore: function() {
