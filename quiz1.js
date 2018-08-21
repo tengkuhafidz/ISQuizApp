@@ -45,13 +45,13 @@ var questions = new Vue({
   },
   methods: {
     generateResult: function() {
-      const resultsSection = document.getElementById("results");
-      resultsSection.style.padding='50px 0';
       this.resetValidation();
       this.validateStudentEmail();
+      const scores = this.calculateScore();
       if (!this.errors.questions.hasError && !this.errors.email.hasError) {
         this.attempts++;
-        const scores = this.calculateScore();
+        const resultsSection = document.getElementById("results");
+        resultsSection.style.padding='50px 0';
         // createPieChart(scores);
         // get object key of item with max value
         let resultTitle = Object.keys(scores).reduce(function(a, b){ return scores[a] > scores[b] ? a : b })
