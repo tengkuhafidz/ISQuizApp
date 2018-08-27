@@ -23,8 +23,7 @@ var quiz2Responses = new Vue({
   },
   methods: {
   	retrieveResponsesFromDB: function() {
-  		quiz2ColRef.orderBy("writtenAt", "desc").get().then((querySnapshot) => {
-  			this.dbRequest.isLoading = true;
+  		quiz2ColRef.orderBy("writtenAt", "desc").onSnapshot((querySnapshot) => {
   			this.responses = [];
         this.summary.task = 0;
         this.summary.relationship = 0;
@@ -52,7 +51,7 @@ var quiz2Responses = new Vue({
 	    });
   	},
     displayGraph: function() {
-      this.retrieveResponsesFromDB()
+      // this.retrieveResponsesFromDB()
       // graph wont be ready without timeout
       setTimeout(()=>{
         if (!this.chart){

@@ -64,14 +64,8 @@
             <div class="column is-narrow has-text-right">
               <button class="button is-medium is-info" @click="displayGraph">Visualise Responses</button>
             </div>
-            <div class="column is-narrow has-text-right">
-              <button class="button is-medium is-info is-outlined" @click="retrieveResponsesFromDB">Refresh Data</button>
-              <p class="subtitle is-7">Last queried: {{ dbRequest.queriedAt }}</p>
-            </div>
           </div>
           <br />
-
-          <div v-if="dbRequest.isLoading" id="loader"></div>
           <table class="table is-hoverable is-fullwidth is-striped animate-bottom">
             <thead>
               <tr>
