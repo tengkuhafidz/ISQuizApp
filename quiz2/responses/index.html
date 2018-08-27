@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>IS3103 Quizes [Admin]</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../../css/styles.css">
     <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>
     <!-- vue development version, includes helpful console warnings -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -13,6 +13,11 @@
     <script src="https://www.gstatic.com/firebasejs/5.4.0/firebase.js"></script>
     <!-- moment js -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+     <!-- morris chart -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
   </head>
   <body>
     <div id="admin">
@@ -36,81 +41,31 @@
 
         <div class="hero-body">
           <div class="container has-text-centered">
-            <p class="title is-1">
-              Admin View
-            </p>
+            <h1 class="title is-1">
+              Leadership Style Quiz Responses
+            </h1>
             <p class="subtitle">
-              Select the IS3103 Quiz results you want to look at
+              View the responses for the quiz in realtime
             </p>
-            <div class="columns">
-              <div class="field column is-6 is-offset-3">
-                <div class="control is-expanded">
-                  <div class="select is-medium is-fullwidth">
-                    <select id="quizOptions" v-model="selectedQuiz">
-                      <option>Select Quiz</option>
-                      <option>Leadership Communication Style Preference</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <a class="button is-light is-large is-outlined" href="#quiz2"> View Responses </a>
           </div>
         </div>
       </section>
 
-      <section class="section" id="quiz1" v-if="selectedQuiz = 'quiz1'">
+      <section class="section" id="quiz2">
         <div class="container">
           <div class="columns">
             <div class="column ">
-              <h1 class="title">Responses for: <a href="../quiz1" target="_blank">Leadership Communication Style Quiz</a> </h1>
+              <h1 class="title">Responses for: <a href="../index.html" target="_blank">Leadership Style Quiz</a> </h1>
               <h2 class="subtitle">
                 The following are responses from the students, sorted according to the latest submission.
               </h2>
             </div>
             <div class="column is-narrow has-text-right">
-              <button class="button is-large is-info" @click="retrieveResponsesFromDB">Refresh Data</button>
-              <p class="subtitle is-7">Last queried: {{ dbRequest.queriedAt }}</p>
-            </div>
-          </div>
-          <br />
-
-          <div v-if="dbRequest.isLoading" id="loader"></div>
-          <table class="table is-hoverable is-fullwidth is-striped animate-bottom">
-            <thead>
-              <tr>
-                <th>Email</th>
-                <th>Result</th>
-                <th class="is-hidden-mobile">Authoritarian</th>
-                <th class="is-hidden-mobile">Democratic</th>
-                <th class="is-hidden-mobile">Laissez-Faire</th>
-                <th class="is-hidden-mobile">Timestamp</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="response in responses">
-                <td>{{ response.student.email }}</td>
-                <td class="is-capitalized">{{ response.results.title }}</td>
-                <td class="is-hidden-mobile">{{ response.results.scores.authoritarian }}</td>
-                <td class="is-hidden-mobile">{{ response.results.scores.democratic }}</td>
-                <td class="is-hidden-mobile">{{ response.results.scores.laissezFaire }}</td>
-                <td class="is-hidden-mobile">{{ response.writtenAt }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="section" id="quiz2" v-if="selectedQuiz = 'quiz2'">
-        <div class="container">
-          <div class="columns">
-            <div class="column ">
-              <h1 class="title">Responses for: <a href="../quiz2" target="_blank">Leadership Style Quiz</a> </h1>
-              <h2 class="subtitle">
-                The following are responses from the students, sorted according to the latest submission.
-              </h2>
+              <button class="button is-medium is-info" @click="displayGraph">Visualise Responses</button>
             </div>
             <div class="column is-narrow has-text-right">
-              <button class="button is-large is-info" @click="retrieveResponsesFromDB">Refresh Data</button>
+              <button class="button is-medium is-info is-outlined" @click="retrieveResponsesFromDB">Refresh Data</button>
               <p class="subtitle is-7">Last queried: {{ dbRequest.queriedAt }}</p>
             </div>
           </div>
@@ -138,6 +93,27 @@
             </tbody>
           </table>
         </div>
+
+        <div class="modal" :class="{ 'is-active': modalActive }" id="modalGraph">
+          <div class="modal-background"></div>
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">Visualise Responses</p>
+              <button class="delete" aria-label="close" @click="closeModal"></button>
+            </header>
+            <section class="modal-card-body" >
+              <div class="columns">
+                <div class="column">
+                  <div id="chart"></div>
+                </div>
+              </div>
+            </section>
+            <footer class="modal-card-foot">
+              <button class="button" @click="closeModal">Close</button>
+            </footer>
+          </div>
+        </div>
+
       </section>
     </div>
 
@@ -148,7 +124,7 @@
         </p>
       </div>
     </footer>
-    <script type="text/javascript" src="../js/utility.js"></script>
+    <script type="text/javascript" src="../../js/utility.js"></script>
     <script type="text/javascript" src="admin.js"></script>
   </body>
 </html>
