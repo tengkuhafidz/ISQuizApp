@@ -84,7 +84,7 @@ var questions = new Vue({
         } else {
           this.updateChart(scores);
         }
-        // this.addToDB();
+        this.addToDB();
       }
     },
   	calculateScore: function() {

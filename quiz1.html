@@ -44,7 +44,7 @@
             Find out your leadership communication style preference by taking this quiz
           </h2>
           <br />
-          <a class="button is-primary is-inverted is-outlined is-large" onclick="goToAnchor('#directions')">Start Quiz</a>        
+          <a class="button is-primary is-inverted is-outlined is-large" onclick="goToAnchor('#directions')">Start Quiz</a>
         </div>
       </div>
     </section>
@@ -73,7 +73,7 @@
         class="animate-bottom"
         v-for="question in questionList"
         v-bind:question="question"
-        v-bind:key="question.id"    
+        v-bind:key="question.id"
         inline-template>
         <section class="section questionSection" :id="'q' + question.id">
           <div class="container questionSection">
@@ -166,7 +166,6 @@
         <div id="myfirstchart"></div>
       </section>
     </div>
-
 
     <footer class="footer">
       <div class="content has-text-centered">
