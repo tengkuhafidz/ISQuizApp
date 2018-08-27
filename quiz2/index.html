@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>IS3103 Quizes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- firebase -->
+    <script src="https://www.gstatic.com/firebasejs/5.4.0/firebase.js"></script>
+    <!-- moment js -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+  </head>
+  <body>
+    <section class="hero is-primary is-bold is-fullheight">
+      <!-- Hero head: will stick at the top -->
+      <div class="hero-head">
+        <header class="navbar">
+          <div class="container">
+            <div class="navbar-brand">
+              <a class="navbar-item title is-4">
+                IS3103 Quizes
+              </a>
+            </div>
+          </div>
+        </header>
+      </div>
+
+      <!-- Hero content: will be in the middle -->
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <h1 class="title is-1">
+            Leadership Style
+          </h1>
+          <h2 class="subtitle">
+            Find out your leadership style by taking taking this questionnaire
+          </h2>
+          <br />
+          <a class="button is-primary is-inverted is-outlined is-large" onclick="goToAnchor('#directions')">Start Quiz</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero is-dark" id="directions">
+      <div class="hero-body">
+        <div class="container">
+        <div class="columns">
+          <div class="column is-three-quarters">
+            <h1 class="title">Directions</h1>
+            <h2 class="subtitle">
+              Read each item carefully and think about how often you engage in the described behaviour.
+            </h2>
+          </div>
+          <div class="column has-vertically-aligned-content">
+            <a class="button is-medium is-primary is-inverted is-outlined" href="#q1"> Got it! </a>
+          </div>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="questions">
+      <question-section
+        v-for="question in questionList"
+        v-bind:question="question"
+        v-bind:key="question.id"
+        inline-template>
+        <section class="section questionSection" :id="'q' + question.id">
+          <div class="container questionSection">
+            <h1 class="title">Statement {{ question.id }}</h1>
+            <h2 class="is-size-4">
+              {{ question.text }}
+            </h2>
+            <br />
+            <div class="field">
+              <div class="control">
+                <div class="columns">
+                  <div class="column">
+                    <label class="radio box fullwidth is-size-5">
+                      <input type="radio" :name="'q' + question.id" value="1" @click="goToNext" v-model="question.score">
+                      Never
+                    </label>
+                  </div>
+                  <div class="column">
+                    <label class="radio box fullwidth is-size-5">
+                      <input type="radio" :name="'q' + question.id" value="2" @click="goToNext" v-model="question.score">
+                      Seldom
+                    </label>
+                  </div>
+                  <div class="column">
+                    <label class="radio box fullwidth is-size-5">
+                      <input type="radio" :name="'q' + question.id" value="3" @click="goToNext" v-model="question.score">
+                      Occasionally
+                    </label>
+                  </div>
+                  <div class="column">
+                    <label class="radio box fullwidth is-size-5">
+                      <input type="radio" :name="'q' + question.id" value="4" @click="goToNext" v-model="question.score">
+                      Often
+                    </label>
+                  </div>
+                  <div class="column">
+                    <label class="radio box fullwidth is-size-5">
+                      <input type="radio" :name="'q' + question.id" value="5" @click="goToNext" v-model="question.score">
+                      <span class="checkmark"></span>
+                      Always
+                    </label>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </section>
+      </question-section>
+
+      <section class="section has-background-dark" id="identityForm">
+        <div class="container">
+          <h1 class="title has-text-white is-4">Final Step</h1>
+          <h2 class="subtitle has-text-white">
+            Please input the following identity information to generate your results. The results will also be emailed to you.
+          </h2>
+          <div class="field is-horizontal is-grouped ">
+            <div class="field-body">
+              <div class="field">
+                <p class="control is-expanded has-icons-left has-icons-right">
+                  <input class="input is-medium" :class="{ 'is-danger': errors.email.hasError }" type="email" placeholder="NUS Email" v-model="student.email">
+                  <span class="icon is-normal is-left">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                </p>
+                <p v-if="errors.email.hasError" class="help is-danger">
+                  {{ errors.email.message }}
+                </p>
+              </div>
+                <p class="control">
+                  <a class="button is-primary is-medium" @click="generateResult">
+                    Submit
+                  </a>
+                </p>
+            </div>
+          </div>
+          <article v-if="errors.questions.hasError" class="message is-danger">
+            <div class="message-body">
+              <p>
+               {{ errors.questions.message }}
+              <p>
+          </article>
+        </div>
+      </section>
+
+      <section id="results">
+        <div class="container has-text-centered" v-show="attempts > 0 && !errors.questions.hasError && !errors.email.hasError">
+          <h1 class="subtitle is-4">Your Leadership Style:</h1>
+          <h1 class="title is-1 is-capitalized">{{ results.title }}-Oriented</h1>
+          <br />
+        </div>
+        <div class="columns">
+          <div class="column is-half is-offset-one-quarter">
+            <div id="chart"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+
+    <footer class="footer">
+      <div class="content has-text-centered">
+        <p>
+          <strong>Leadership Quizes</strong> for <a href="http://www.nus.edu.sg/celc/programmes/is3103.html" target="_blank">IS3103</a> module | NUS School of Computing
+        </p>
+      </div>
+    </footer>
+    <script type="text/javascript" src="../js/utility.js"></script>
+    <script type="text/javascript" src="quiz2.js"></script>
+  </body>
+</html>

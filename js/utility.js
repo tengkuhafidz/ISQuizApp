@@ -1,13 +1,13 @@
 // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyDPehuY1uPr5-bJdUAMRL5ogX8khdY2aSQ",
-    authDomain: "isquizapp.firebaseapp.com",
-    databaseURL: "https://isquizapp.firebaseio.com",
-    projectId: "isquizapp",
-    storageBucket: "isquizapp.appspot.com",
-    messagingSenderId: "301458684734"
-  };
-  firebase.initializeApp(config);
+var config = {
+  apiKey: "AIzaSyDPehuY1uPr5-bJdUAMRL5ogX8khdY2aSQ",
+  authDomain: "isquizapp.firebaseapp.com",
+  databaseURL: "https://isquizapp.firebaseio.com",
+  projectId: "isquizapp",
+  storageBucket: "isquizapp.appspot.com",
+  messagingSenderId: "301458684734"
+};
+firebase.initializeApp(config);
 
 // Initialize Cloud Firestore through Firebase
 var db = firebase.firestore();
