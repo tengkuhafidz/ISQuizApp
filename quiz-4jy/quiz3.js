@@ -90,10 +90,8 @@ var questions = new Vue({
       this.validateStudentEmail();
       this.validateStudentGender();
       const results = this.calculateScore();
-        console.log('generateResult', results)
 
-
-      if (!this.errors.questions.hasError && !this.errors.email.hasError) {
+      if (!this.errors.questions.hasError && !this.errors.email.hasError && !this.errors.gender.hasError) {
         this.attempts++;
         const resultsSection = document.getElementById("results");
         resultsSection.style.padding='100px 0';
@@ -102,11 +100,6 @@ var questions = new Vue({
         goToAnchor('#results');
         console.log('generateResult', this.results)
 
-        // if (!this.chart) {
-        //   this.createChart(results.scores);
-        // } else {
-        //   this.updateChart(results.scores);
-        // }
         this.addToDB();
       }
     },
