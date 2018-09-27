@@ -38,10 +38,10 @@
       <div class="hero-body">
         <div class="container has-text-centered">
           <h1 class="title is-1">
-            Leadership Communication Style
+            Motivation To Lead Scale
           </h1>
           <h2 class="subtitle">
-            Find out your leadership communication style preference by taking this quiz
+            Find out your motivation to lead sclae by taking taking this questionnaire
           </h2>
           <br />
           <a class="button is-primary is-inverted is-outlined is-large" onclick="goToAnchor('#directions')">Start Quiz</a>
@@ -56,7 +56,7 @@
           <div class="column is-three-quarters">
             <h1 class="title">Directions</h1>
             <h2 class="subtitle">
-              Read the 12 statements below. For each statement, indicate your level of agreement.
+              Read the statements below. For each statement, indicate your level of agreement.
             </h2>
           </div>
           <div class="column has-vertically-aligned-content">
@@ -68,9 +68,7 @@
     </section>
 
     <div id="questions">
-      <div v-if="dbRequest.isLoading" id="loader"></div>
       <question-section
-        class="animate-bottom"
         v-for="question in questionList"
         v-bind:question="question"
         v-bind:key="question.id"
@@ -100,7 +98,7 @@
                   <div class="column">
                     <label class="radio box fullwidth is-size-5">
                       <input type="radio" :name="'q' + question.id" value="3" @click="goToNext" v-model="question.score">
-                      Unsure
+                      Neutral
                     </label>
                   </div>
                   <div class="column">
@@ -128,8 +126,23 @@
           <h2 class="subtitle has-text-white">
             Please input the following identity information to generate your results. The results will also be emailed to you.
           </h2>
-          <div class="field is-horizontal is-grouped ">
+          
+          <div class="field is-horizontal is-grouped">
             <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <div class="select is-medium is-fullwidth" :class="{ 'is-danger': errors.gender.hasError }">
+                    <select v-model="student.gender">
+                      <option :value="null"  disabled>Gender</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                    </select>
+                  </div>
+                  <p v-if="errors.gender.hasError" class="help is-danger">
+                      {{ errors.gender.message }}
+                    </p>
+                </div>
+              </div>
               <div class="field">
                 <p class="control is-expanded has-icons-left has-icons-right">
                   <input class="input is-medium" :class="{ 'is-danger': errors.email.hasError }" type="email" placeholder="NUS Email" v-model="student.email">
@@ -158,14 +171,19 @@
       </section>
 
       <section id="results">
-        <div class="container has-text-centered" v-show="attempts > 0 && !errors.questions.hasError && !errors.email.hasError">
-          <h1 class="subtitle is-4">Your Leadership Communication Style:</h1>
-          <h1 class="title is-1 is-capitalized">{{ results.title }}</h1>
+        <div class="container has-text-centered" v-show="attempts > 0 && !errors.questions.hasError && !errors.email.hasError && !errors.gender.hasError">
+          <h1 class="subtitle is-4">Your Motivation To Lead Score:</h1>
+          <h1 class="title is-1 is-capitalized">{{ results.totalScore }} ({{ properTitle }})</h1>
           <br />
         </div>
-        <div id="myfirstchart"></div>
+        <div class="columns">
+          <div class="column is-half is-offset-one-quarter">
+            <div id="chart"></div>
+          </div>
+        </div>
       </section>
     </div>
+
 
     <footer class="footer">
       <div class="content has-text-centered">
@@ -175,6 +193,6 @@
       </div>
     </footer>
     <script type="text/javascript" src="../js/utility.js"></script>
-    <script type="text/javascript" src="quiz1.js"></script>
+    <script type="text/javascript" src="quiz4.js"></script>
   </body>
 </html>
