@@ -28,7 +28,7 @@
             <div class="container">
               <div class="navbar-brand">
                 <a class="navbar-item title is-4">
-                  IS3103 Quizes
+                  IS3103 Quizzes
                 </a>
                 <span class="navbar-burger burger" data-target="navbarMenuHeroB">
                   <span></span>
@@ -43,21 +43,21 @@
         <div class="hero-body">
           <div class="container has-text-centered">
             <h1 class="title is-1">
-              Motivation To Lead Scale
+              Creative Mindset and Self-Concept
             </h1>
             <p class="subtitle">
               View the responses of the quiz in realtime
             </p>
-            <a class="button is-light is-large is-outlined" href="#quiz4"> View Responses </a>
+            <a class="button is-light is-large is-outlined" href="#quiz5"> View Responses </a>
           </div>
         </div>
       </section>
 
-      <section class="section" id="quiz4">
+      <section class="section" id="quiz5">
         <div class="container">
           <div class="columns">
             <div class="column ">
-              <h1 class="title">Responses for: <a href="../index.html" target="_blank">Motivation To Lead Scale</a> </h1>
+              <h1 class="title">Responses for: <a href="../index.html" target="_blank">Creative Mindset and Self-Concept</a> </h1>
               <h2 class="subtitle">
                 The following are responses from the students, sorted according to the latest submission.
               </h2>
@@ -81,11 +81,11 @@
               <tr>
                 <th>Gender</th>
                 <th>Email</th>
-                <th>Total Score</th>
                 <th>Type</th>
-                <th class="is-hidden-mobile">Affective-Identify</th>
-                <th class="is-hidden-mobile">Noncalculative</th>
-                <th class="is-hidden-mobile">Social-Normative</th>
+                <th class="is-hidden-mobile">Growth-Mindset</th>
+                <th class="is-hidden-mobile">Fixed-Mindset</th>
+                <th class="is-hidden-mobile">Creative Self-Efficacy</th>
+                <th class="is-hidden-mobile">Creative Personal Identity</th>
                 <th class="is-hidden-mobile">Timestamp</th>
                 <th class="is-hidden-mobile">Delete</th>
               </tr>
@@ -97,11 +97,11 @@
                   {{ response.student.email }} <br />
                   <button class="button is-info is-outlined is-small" @click="promptEmail(response.student.email)">Email Results</button>
                 </td>
-                <td>{{ response.results.totalScore }}</td>
                 <td>{{ getProperTitle(response.results.title) }}</td>
-                <td class="is-hidden-mobile">{{ response.results.scores.affectiveIdentify }}</td>
-                <td class="is-hidden-mobile">{{ response.results.scores.noncalculative }}</td>
-                <td class="is-hidden-mobile">{{ response.results.scores.socialNormative }}</td>
+                <td class="is-hidden-mobile">{{ response.results.scores.growthMindset }}</td>
+                <td class="is-hidden-mobile">{{ response.results.scores.fixedMindset }}</td>
+                <td class="is-hidden-mobile">{{ response.results.scores.creativeSelfEfficacy }}</td>
+                <td class="is-hidden-mobile">{{ response.results.scores.creativePersonalIdentity }}</td>
                 <td class="is-hidden-mobile">{{ response.writtenAt }}</td>
                 <td class="is-hidden-mobile"><button class="button is-danger is-outlined" @click="promptDelete(response.student.email)">Delete</button></td>
               </tr>
@@ -120,38 +120,32 @@
             </thead>
             <tbody>
               <tr>
-                <th>Affective Identify</th>
-                <td>{{ summary.all.affectiveIdentify }}</td>
-                <td>{{ summary.male.affectiveIdentify }}</td>
-                <td>{{ summary.female.affectiveIdentify }}</td>
+                <th>Growth-Mindset</th>
+                <td>{{ summary.all.growthMindset }}</td>
+                <td>{{ summary.male.growthMindset }}</td>
+                <td>{{ summary.female.growthMindset }}</td>
               </tr>
               <tr>
-                <th>Noncalculative</th>
-                <td>{{ summary.all.noncalculative }}</td>
-                <td>{{ summary.male.noncalculative }}</td>
-                <td>{{ summary.female.noncalculative }}</td>
-
+                <th>Fixed-Mindset</th>
+                <td>{{ summary.all.fixedMindset }}</td>
+                <td>{{ summary.male.fixedMindset }}</td>
+                <td>{{ summary.female.fixedMindset }}</td>
               </tr>
               <tr>
-                <th>Social Normative</th>
-                <td>{{ summary.all.socialNormative }}</td>
-                <td>{{ summary.male.socialNormative }}</td>
-                <td>{{ summary.female.socialNormative }}</td>
-
+                <th>Creative Self-Efficacy</th>
+                <td>{{ summary.all.creativeSelfEfficacy }}</td>
+                <td>{{ summary.male.creativeSelfEfficacy }}</td>
+                <td>{{ summary.female.creativeSelfEfficacy }}</td>
               </tr>
-                <th>Total</th>
-                <td>{{ summary.all.affectiveIdentify + summary.all.noncalculative + summary.all.socialNormative }}</td>
-                <td>{{ summary.male.affectiveIdentify + summary.male.noncalculative + summary.male.socialNormative }}</td>
-                <td>{{ summary.female.affectiveIdentify + summary.female.noncalculative + summary.female.socialNormative }}</td>
+              <tr>
+                <th>Creative Personal Identity</th>
+                <td>{{ summary.all.creativePersonalIdentity }}</td>
+                <td>{{ summary.male.creativePersonalIdentity }}</td>
+                <td>{{ summary.female.creativePersonalIdentity }}</td>
               </tr>
             </tbody>
           </table>
-
-
         </div>
-
-
-
       </section>
     </div>
 

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>IS3103 Quizes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- firebase -->
+    <script src="https://www.gstatic.com/firebasejs/5.4.0/firebase.js"></script>
+    <!-- sweetalert -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.26.28/sweetalert2.all.min.js"></script>
+</head>
+<body>
+<section class="hero is-primary is-fullheight is-bold" id="sendResults">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            <h1 class="title is-2" style="margin-top: -100px">
+                Send All Quiz Results
+            </h1>
+            <p class="subtitle">All IS3103 quiz results of the student will be sent to the specified email</p>
+            <br/>
+            <div class="control has-icons-left ">
+                <input class="input is-medium" type="email" placeholder="Email" v-model="email">
+                <span class="icon is-left">
+                 <i class="fas fa-envelope"></i>
+                </span>
+            </div>
+            <br/>
+            <a class="button is-large is-primary is-inverted" @click="emailResults">Email Results</a>
+        </div>
+    </div>
+</section>
+<script type="text/javascript" src="../js/utility.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
