@@ -81,7 +81,6 @@
               <tr>
                 <th>Gender</th>
                 <th>Email</th>
-                <th>Type</th>
                 <th class="is-hidden-mobile">Growth-Mindset</th>
                 <th class="is-hidden-mobile">Fixed-Mindset</th>
                 <th class="is-hidden-mobile">Creative Self-Efficacy</th>
@@ -97,7 +96,6 @@
                   {{ response.student.email }} <br />
                   <button class="button is-info is-outlined is-small" @click="promptEmail(response.student.email)">Email Results</button>
                 </td>
-                <td>{{ getProperTitle(response.results.title) }}</td>
                 <td class="is-hidden-mobile">{{ response.results.scores.growthMindset }}</td>
                 <td class="is-hidden-mobile">{{ response.results.scores.fixedMindset }}</td>
                 <td class="is-hidden-mobile">{{ response.results.scores.creativeSelfEfficacy }}</td>
