@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>IS3103 Quizes [Admin]</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>
+    <!-- vue development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- firebase -->
+    <script src="https://www.gstatic.com/firebasejs/5.4.0/firebase.js"></script>
+    <!-- moment js -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+     <!-- morris chart -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.26.28/sweetalert2.all.min.js"></script>
+  </head>
+  <body>
+    <div id="admin">
+      <section class="hero is-dark is-fullheight is-bold">
+        <div class="hero-head">
+          <nav class="navbar">
+            <div class="container">
+              <div class="navbar-brand">
+                <a class="navbar-item title is-4">
+                  IS3103 Quizzes
+                </a>
+                <span class="navbar-burger burger" data-target="navbarMenuHeroB">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </span>
+              </div>
+            </div>
+          </nav>
+        </div>
+
+        <div class="hero-body">
+          <div class="container has-text-centered">
+            <h1 class="title is-1">
+              Self-Perception of Leadership Skills Survey
+            </h1>
+            <p class="subtitle">
+              View the responses of the quiz in realtime
+            </p>
+            <a class="button is-light is-large is-outlined" href="#quiz6"> View Responses </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="quiz6">
+        <div class="container">
+          <div class="columns">
+            <div class="column ">
+              <h1 class="title">Responses for: <a href="../index.html" target="_blank">Self-Perception of Leadership Skills Survey</a> </h1>
+              <h2 class="subtitle">
+                The following are responses from the students, sorted according to the latest submission.
+              </h2>
+            </div>
+<!--             <div class="column is-narrow has-text-right">
+              <button class="button is-medium is-info" @click="displayGraph">Visualise Responses</button>
+            </div> -->
+          </div>
+          <br />
+
+          <div class="tabs is-medium">
+            <ul>
+              <li :class="{'is-active': !tabIndex}" @click="openTab(0)"><a>Responses</a></li>
+              <li :class="{'is-active': tabIndex}" @click="openTab(1)"><a>Summary</a></li>
+            </ul>
+          </div>
+
+          <!-- Responses Tab -->
+          <table v-if="!tabIndex" class="table is-hoverable is-fullwidth is-striped animate-bottom">
+            <thead>
+              <tr>
+                <th>Gender</th>
+                <th>Email</th>
+                <th class="is-hidden-mobile">Interpersonal/Intrapersonal</th>
+                <th class="is-hidden-mobile">Task-Specific</th>
+                <th class="is-hidden-mobile">Cognitive</th>
+                <th class="is-hidden-mobile">Communication</th>
+                <th class="is-hidden-mobile">Timestamp</th>
+                <th class="is-hidden-mobile">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="response in responses">
+                <td class="is-capitalized">{{ response.student.gender }}</td>
+                <td>
+                  {{ response.student.email }} <br />
+                  <button class="button is-info is-outlined is-small" @click="promptEmail(response.student.email)">Email Results</button>
+                </td>
+                <td class="is-hidden-mobile">{{ response.results.scores.interpersonal }} of 35 ({{ getScorePercentage('interpersonal', response.results.scores.interpersonal) }})</td>
+                <td class="is-hidden-mobile">{{ response.results.scores.taskSpecific }} of 20 ({{ getScorePercentage('taskSpecific', summary.all.taskSpecific) }})</td>
+                <td class="is-hidden-mobile">{{ response.results.scores.cognitive }} of 15 ({{ getScorePercentage('cognitive', summary.all.cognitive) }})</td>
+                <td class="is-hidden-mobile">{{ response.results.scores.communication }} of 20 ({{ getScorePercentage('communication', summary.all.communication) }})</td>
+                <td class="is-hidden-mobile">{{ response.writtenAt }}</td>
+                <td class="is-hidden-mobile"><button class="button is-danger is-outlined" @click="promptDelete(response.student.email)">Delete</button></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Summary tab -->
+          <table v-if="tabIndex" class="table is-striped" style="margin-right: auto; margin-left: auto">
+            <thead>
+              <tr>
+                <th> Category </th>
+                <th> Both </th>
+                <th> Male </th>
+                <th> Female </th>
+              <tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>Interpersonal/Intrapersonal Skills</th>
+                <td>{{ summary.all.interpersonal }} of 35 ({{ getScorePercentage('interpersonal', summary.all.interpersonal) }})</td>
+                <td>{{ summary.male.interpersonal }} of 35 ({{ getScorePercentage('interpersonal', summary.male.interpersonal) }})</td>
+                <td>{{ summary.female.interpersonal }} of 35 ({{ getScorePercentage('interpersonal', summary.female.interpersonal) }})</td>
+              </tr>
+              <tr>
+                <th>Task-Specific Skills</th>
+                <td>{{ summary.all.taskSpecific }} of 20 ({{ getScorePercentage('taskSpecific', summary.all.taskSpecific) }})</td>
+                <td>{{ summary.male.taskSpecific }} of 20 ({{ getScorePercentage('taskSpecific', summary.male.taskSpecific) }})</td>
+                <td>{{ summary.female.taskSpecific }} of 20 ({{ getScorePercentage('taskSpecific', summary.female.taskSpecific) }})</td>
+              </tr>
+              <tr>
+                <th>Cognitive Skills</th>
+                <td>{{ summary.all.cognitive }} of 15 ({{ getScorePercentage('cognitive', summary.all.cognitive) }})</td>
+                <td>{{ summary.male.cognitive }} of 15 ({{ getScorePercentage('cognitive', summary.male.cognitive) }})</td>
+                <td>{{ summary.female.cognitive }} of 15 ({{ getScorePercentage('cognitive', summary.female.cognitive) }}) </td>
+              </tr>
+              <tr>
+                <th>Communication Skills</th>
+                <td>{{ summary.all.communication }} of 20 ({{ getScorePercentage('communication', summary.all.communication) }})</td>
+                <td>{{ summary.male.communication }} of 20 ({{ getScorePercentage('communication', summary.male.communication) }})</td>
+                <td>{{ summary.female.communication }} of 20 ({{ getScorePercentage('communication', summary.female.communication) }})</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <footer class="footer">
+      <div class="content has-text-centered">
+        <p>
+          <strong>Leadership Quizes</strong> for IS3103 module | NUS School of Computing
+        </p>
+      </div>
+    </footer>
+    <script type="text/javascript" src="../../js/utility.js"></script>
+    <script type="text/javascript" src="admin.js"></script>
+  </body>
+</html>
