@@ -131,7 +131,7 @@ var quiz6Responses = new Vue({
         confirmButtonText: 'Yes, delete it!'
       }).then((result) => {
         if (result.value) {
-          quiz5ColRef.doc(email).delete().then(function() {
+          quiz6ColRef.doc(email).delete().then(function() {
               console.log("Document successfully deleted!");
           }).catch(function(error) {
               console.error("Error removing document: ", error);

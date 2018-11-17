@@ -3,6 +3,7 @@ const quiz2ColRef = db.collection('quizes').doc('tJUrl9JFXWshEDHLSOLg').collecti
 const quiz3ColRef = db.collection('quizes').doc('4JYTDqsFZoWyfRSUEuoe').collection('responses');
 const quiz4ColRef = db.collection('quizes').doc('avHls1vanK3UTWZJDewz').collection('responses');
 const quiz5ColRef = db.collection('quizes').doc('AWJdUqHCxiHL5XLzD6v1').collection('responses');
+const quiz6ColRef = db.collection('quizes').doc('OeFxqmapol9srPwcknP0').collection('responses');
 
 
 var app = new Vue({
@@ -59,6 +60,14 @@ var app = new Vue({
                         emailResend: new Date()
                     }).then(function() {
                         console.log("Quiz 5 result request successful!");
+                    }).catch(function(error) {
+                        console.error("Error updating document: ", error);
+                    });
+
+                    quiz6ColRef.doc(this.email).update({
+                        emailResend: new Date()
+                    }).then(function() {
+                        console.log("Quiz 6 result request successful!");
                     }).catch(function(error) {
                         console.error("Error updating document: ", error);
                     });
