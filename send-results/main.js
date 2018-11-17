@@ -23,53 +23,54 @@ var app = new Vue({
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
+                    const lowerCapsEmail = this.email.toLowerCase();
 
-                    quiz1ColRef.doc(this.email).update({
+                    quiz1ColRef.doc(lowerCapsEmail).update({
                         emailResend: new Date()
                     }).then(function() {
                         console.log("Quiz 1 result request successful!");
                     }).catch(function(error) {
-                        console.error("Error updating document: ", error);
+                        console.error("Error requesting quiz 1 results: ", error);
                     });
 
-                    quiz2ColRef.doc(this.email).update({
+                    quiz2ColRef.doc(lowerCapsEmail).update({
                         emailResend: new Date()
                     }).then(function() {
                         console.log("Quiz 2 result request successful!");
                     }).catch(function(error) {
-                        console.error("Error updating document: ", error);
+                        console.error("Error requesting quiz 2 results: ", error);
                     });
 
-                    quiz3ColRef.doc(this.email).update({
+                    quiz3ColRef.doc(lowerCapsEmail).update({
                         emailResend: new Date()
                     }).then(function() {
                         console.log("Quiz 3 result request successful!");
                     }).catch(function(error) {
-                        console.error("Error updating document: ", error);
+                        console.error("Error requesting quiz 3 results", error);
                     });
 
-                    quiz4ColRef.doc(this.email).update({
+                    quiz4ColRef.doc(lowerCapsEmail).update({
                         emailResend: new Date()
                     }).then(function() {
                         console.log("Quiz 4 result request successful!");
                     }).catch(function(error) {
-                        console.error("Error updating document: ", error);
+                        console.error("Error requesting quiz 4 results", error);
                     });
 
-                    quiz5ColRef.doc(this.email).update({
+                    quiz5ColRef.doc(lowerCapsEmail).update({
                         emailResend: new Date()
                     }).then(function() {
                         console.log("Quiz 5 result request successful!");
                     }).catch(function(error) {
-                        console.error("Error updating document: ", error);
+                        console.error("Error requesting quiz 5 results", error);
                     });
 
-                    quiz6ColRef.doc(this.email).update({
+                    quiz6ColRef.doc(lowerCapsEmail).update({
                         emailResend: new Date()
                     }).then(function() {
                         console.log("Quiz 6 result request successful!");
                     }).catch(function(error) {
-                        console.error("Error updating document: ", error);
+                        console.error("Error requesting quiz 6 results", error);
                     });
 
                     swal(
