@@ -3,12 +3,7 @@ const quiz3ColRef = db.collection('quizes').doc('4JYTDqsFZoWyfRSUEuoe').collecti
 var quiz2Responses = new Vue({
   el: '#quiz2',
   data: {
-    dbRequest: {
-      isLoading: true,
-      hasError: false,
-      queriedAt: null
-    },
-    modalActive: false,
+    classOf: 'ay2018-2019sem2',
     responses: [],
     summary: {
       all: {
@@ -50,7 +45,15 @@ var quiz2Responses = new Vue({
   },
   methods: {
   	retrieveResponsesFromDB: function() {
-  		quiz3ColRef.orderBy("writtenAt", "desc").onSnapshot((querySnapshot) => {
+  		// set ref to the entire responses by default
+      let ref = quiz3ColRef;
+
+      // if class is not 'ay2018-2019sem1' (its unfilterable at the moment), then filter according to selected class
+      if (this.classOf !== 'all') {
+        ref = quiz3ColRef.where("student.class", "==", this.classOf);
+      } 
+        
+  		ref.orderBy("writtenAt", "desc").onSnapshot((querySnapshot) => {
   			this.responses = [];
         this.resetSummary();
         console.log('1')
@@ -183,6 +186,32 @@ var quiz2Responses = new Vue({
           )
         }
       })
-    }
+    },
+    promptEmail: function(email) {
+      swal({
+        title: 'Are you sure?',
+        text: "Results will be emailed to student once you confirm!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, send email!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.value) {
+          quiz3ColRef.doc(email).update({
+            emailResend: new Date()
+          }).then(function() {
+              console.log("Document successfully updated!");
+          }).catch(function(error) {
+              console.error("Error updating document: ", error);
+          });
+          swal(
+            'Sending email...',
+            `Result is being sent to ${email}. It may take awhile.`,
+            'success'
+          )
+        }
+      })
+    },
   },
 })

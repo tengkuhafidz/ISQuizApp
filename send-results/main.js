@@ -28,49 +28,49 @@ var app = new Vue({
                     quiz1ColRef.doc(lowerCapsEmail).update({
                         emailResend: new Date()
                     }).then(function() {
-                        console.log("Quiz 1 result request successful!");
+                        console.log("Questionnaire 1 result request successful!");
                     }).catch(function(error) {
-                        console.error("Error requesting quiz 1 results: ", error);
+                        console.error("Error requesting questionnaire 1 results: ", error);
                     });
 
                     quiz2ColRef.doc(lowerCapsEmail).update({
                         emailResend: new Date()
                     }).then(function() {
-                        console.log("Quiz 2 result request successful!");
+                        console.log("Questionnaire 2 result request successful!");
                     }).catch(function(error) {
-                        console.error("Error requesting quiz 2 results: ", error);
+                        console.error("Error requesting questionnaire 2 results: ", error);
                     });
 
                     quiz3ColRef.doc(lowerCapsEmail).update({
                         emailResend: new Date()
                     }).then(function() {
-                        console.log("Quiz 3 result request successful!");
+                        console.log("Questionnaire 3 result request successful!");
                     }).catch(function(error) {
-                        console.error("Error requesting quiz 3 results", error);
+                        console.error("Error requesting questionnaire 3 results", error);
                     });
 
                     quiz4ColRef.doc(lowerCapsEmail).update({
                         emailResend: new Date()
                     }).then(function() {
-                        console.log("Quiz 4 result request successful!");
+                        console.log("Questionnaire 4 result request successful!");
                     }).catch(function(error) {
-                        console.error("Error requesting quiz 4 results", error);
+                        console.error("Error requesting questionnaire 4 results", error);
                     });
 
                     quiz5ColRef.doc(lowerCapsEmail).update({
                         emailResend: new Date()
                     }).then(function() {
-                        console.log("Quiz 5 result request successful!");
+                        console.log("Questionnaire 5 result request successful!");
                     }).catch(function(error) {
-                        console.error("Error requesting quiz 5 results", error);
+                        console.error("Error requesting questionnaire 5 results", error);
                     });
 
                     quiz6ColRef.doc(lowerCapsEmail).update({
                         emailResend: new Date()
                     }).then(function() {
-                        console.log("Quiz 6 result request successful!");
+                        console.log("Questionnaire 6 result request successful!");
                     }).catch(function(error) {
-                        console.error("Error requesting quiz 6 results", error);
+                        console.error("Error requesting questionnaire 6 results", error);
                     });
 
                     swal(

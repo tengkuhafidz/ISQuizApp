@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>IS3103 Quizes [Admin]</title>
+    <title>IS3103 Questionnaires [Admin]</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
     <link rel="stylesheet" href="../../css/styles.css">
     <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>
@@ -13,6 +13,8 @@
     <script src="https://www.gstatic.com/firebasejs/5.4.0/firebase.js"></script>
     <!-- moment js -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.26.28/sweetalert2.all.min.js"></script>
+  
   </head>
   <body>
     <div id="admin">
@@ -22,7 +24,7 @@
             <div class="container">
               <div class="navbar-brand">
                 <a class="navbar-item title is-4">
-                  IS3103 Quizes
+                  IS3103 Questionnaires
                 </a>
                 <span class="navbar-burger burger" data-target="navbarMenuHeroB">
                   <span></span>
@@ -37,63 +39,124 @@
         <div class="hero-body">
           <div class="container has-text-centered">
             <h1 class="title is-1">
-              Leadership Communication Style Quiz Responses
+              Leadership Communication Style Questionnaire Responses
             </h1>
             <p class="subtitle">
-              View the responses for the quiz in realtime
+              View the responses for the questionnaire in realtime
             </p>
+            <a class="button is-light is-large is-outlined" href="../index.html" target="_blank"> View Questionnaire </a>
             <a class="button is-light is-large is-outlined" href="#quiz1"> View Responses </a>
           </div>
         </div>
       </section>
 
-      <section class="section" id="quiz1" v-if="selectedQuiz = 'quiz1'">
+      <section class="section" id="quiz1">
         <div class="container">
           <div class="columns">
             <div class="column ">
-              <h1 class="title">Responses for: <a href="../quiz1" target="_blank">Leadership Communication Style Quiz</a> </h1>
+              <div class="field is-horizontal">
+                <div class="field-label is-large">
+                  <label class="label">Responses from</label>
+                </div>
+                <div class="field-body">
+                  <div class="field">
+                    <div class="control">
+                        <div class="select is-medium is-fullwidth">
+                            <select v-model="classOf" @change="retrieveResponsesFromDB()">
+                              <option value="ay2018-2019sem2">AY2018-2019 Semester 2</option>
+                              <option value="all">All Classes</option>
+                            </select>
+                          </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <h2 class="subtitle">
                 The following are responses from the students, sorted according to the latest submission.
               </h2>
             </div>
-            <div class="column is-narrow has-text-right">
-              <button class="button is-large is-info" @click="retrieveResponsesFromDB">Refresh Data</button>
-              <p class="subtitle is-7">Last queried: {{ dbRequest.queriedAt }}</p>
-            </div>
           </div>
           <br />
 
-          <div v-if="dbRequest.isLoading" id="loader"></div>
-          <table class="table is-hoverable is-fullwidth is-striped animate-bottom">
+          <div class="tabs is-medium">
+              <ul>
+                <li :class="{'is-active': !tabIndex}" @click="openTab(0)"><a>Responses</a></li>
+                <li :class="{'is-active': tabIndex}" @click="openTab(1)"><a>Summary</a></li>
+              </ul>
+            </div>
+
+          <!-- Responses Tab -->
+          <table v-if="!tabIndex" class="table is-hoverable is-fullwidth is-striped animate-bottom">
             <thead>
               <tr>
+                <th>Gender</th>
                 <th>Email</th>
                 <th>Result</th>
                 <th class="is-hidden-mobile">Authoritarian</th>
                 <th class="is-hidden-mobile">Democratic</th>
                 <th class="is-hidden-mobile">Laissez-Faire</th>
                 <th class="is-hidden-mobile">Timestamp</th>
+                <th class="is-hidden-mobile">Delete</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="response in responses">
-                <td>{{ response.student.email }}</td>
+                <td class="is-capitalized">{{ response.student.gender }}</td>
+                <td>
+                  {{ response.student.email }} <br />
+                  <button class="button is-info is-outlined is-small" @click="promptEmail(response.student.email)">Email Results</button>
+                </td>
                 <td class="is-capitalized">{{ response.results.title }}</td>
                 <td class="is-hidden-mobile">{{ response.results.scores.authoritarian }}</td>
                 <td class="is-hidden-mobile">{{ response.results.scores.democratic }}</td>
                 <td class="is-hidden-mobile">{{ response.results.scores.laissezFaire }}</td>
                 <td class="is-hidden-mobile">{{ response.writtenAt }}</td>
+                <td class="is-hidden-mobile"><button class="button is-danger is-outlined" @click="promptDelete(response.student.email)">Delete</button></td>
               </tr>
             </tbody>
           </table>
         </div>
+
+        <!-- Summary tab -->
+        <table v-if="tabIndex" class="table is-striped" style="margin-right: auto; margin-left: auto">
+            <thead>
+              <tr>
+                <th> Category </th>
+                <th> Both ({{summary.all.totalResponses}})</th>
+                <th> Male ({{summary.male.totalResponses}})</th>
+                <th> Female ({{summary.female.totalResponses}})</th>
+              <tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>Authoritarian</th>
+                <td>{{ summary.all.authoritarian }} of 20 ({{ getScorePercentage('authoritarian', summary.all.authoritarian) }})</td>
+                <td>{{ summary.male.authoritarian }} of 20 ({{ getScorePercentage('authoritarian', summary.male.authoritarian) }})</td>
+                <td>{{ summary.female.authoritarian }} of 20 ({{ getScorePercentage('authoritarian', summary.female.authoritarian) }})</td>
+              </tr>
+              <tr>
+                <th>Democratic</th>
+                <td>{{ summary.all.democratic }} of 20 ({{ getScorePercentage('democratic', summary.all.democratic) }})</td>
+                <td>{{ summary.male.democratic }} of 20 ({{ getScorePercentage('democratic', summary.male.democratic) }})</td>
+                <td>{{ summary.female.democratic }} of 20 ({{ getScorePercentage('democratic', summary.female.democratic) }})</td>
+              </tr>
+              <tr>
+                <th>Laissez-Faire</th>
+                <td>{{ summary.all.laissezFaire }} of 15 ({{ getScorePercentage('laissezFaire', summary.all.laissezFaire) }})</td>
+                <td>{{ summary.male.laissezFaire }} of 15 ({{ getScorePercentage('laissezFaire', summary.male.laissezFaire) }})</td>
+                <td>{{ summary.female.laissezFaire }} of 15 ({{ getScorePercentage('laissezFaire', summary.female.laissezFaire) }}) </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
       </section>
     </div>
 
     <footer class="footer">
       <div class="content has-text-centered">
         <p>
-          <strong>Leadership Quizes</strong> for IS3103 module | NUS School of Computing
+          <strong>Leadership Questionnaires</strong> for IS3103 module | NUS School of Computing
         </p>
       </div>
     </footer>

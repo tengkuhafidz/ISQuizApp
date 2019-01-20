@@ -1,21 +1,29 @@
 const quiz2ColRef = db.collection('quizes').doc('tJUrl9JFXWshEDHLSOLg').collection('responses');
-const modal = document.getElementById('modalGraph');
 
 var quiz2Responses = new Vue({
   el: '#quiz2',
   data: {
-    dbRequest: {
-      isLoading: true,
-      hasError: false,
-      queriedAt: null
-    },
-    modalActive: false,
+    classOf: 'ay2018-2019sem2',
     responses: [],
     summary: {
-      task: 0,
-      relationship: 0
+      all: {
+        totalResponses: 0,
+        task: 0,
+        relationship: 0
+      },
+      male:  {
+        totalResponses: 0,
+        task: 0,
+        relationship: 0
+      },
+      female:  {
+        totalResponses: 0,
+        task: 0,
+        relationship: 0
+      }
     },
     chart: null,
+    tabIndex: 0,
     moment: moment
   },
   mounted () {
@@ -23,71 +31,134 @@ var quiz2Responses = new Vue({
   },
   methods: {
   	retrieveResponsesFromDB: function() {
-  		quiz2ColRef.orderBy("writtenAt", "desc").onSnapshot((querySnapshot) => {
-  			this.responses = [];
-        this.summary.task = 0;
-        this.summary.relationship = 0;
+
+      // set ref to the entire responses by default
+      let ref = quiz2ColRef;
+
+      // if class is not 'ay2018-2019sem1' (its unfilterable at the moment), then filter according to selected class
+      if (this.classOf !== 'all') {
+        ref = quiz2ColRef.where("student.class", "==", this.classOf);
+      } 
+
+  		ref.orderBy("writtenAt", "desc").onSnapshot((querySnapshot) => {
+        this.responses = [];
+        this.resetSummary();
 		    querySnapshot.forEach((doc) => {
 		        //ensure this.responses is empty
 		        const response = doc.data();
 		        // format timestamp
 		        response.writtenAt = moment(response.writtenAt.seconds * 1000).format('Do MMM (ddd), h:mm a');
-		        this.responses.push(response);
-            // store summary
-            if(response.results.title === "task") {
-              this.summary.task++;
+            this.responses.push(response);
+            const scores = response.results.scores;
+            // Initialising results in summary categories
+            this.summary.all.totalResponses++;
+            this.summary.all.task += scores.task;
+              this.summary.all.relationship += scores.relationship;
+            if(response.student.gender === "male") {
+              this.summary.male.totalResponses++;
+              this.summary.male.task += scores.task;
+              this.summary.male.relationship += scores.relationship;
             } else {
-              this.summary.relationship++;
+              this.summary.female.totalResponses++;
+              this.summary.female.task += scores.task;
+              this.summary.female.relationship += scores.relationship;
             }
-		    });
-		})
-		.catch((error) => {
-	        console.log("Error getting document:", error);
-	        this.dbRequest.hasError = true;
-	    })
-	    .finally(() => {
-	    	this.dbRequest.isLoading = false;
-	    	this.dbRequest.queriedAt = moment().format('h:mm:ss a');
-	    });
+        });
+        this.calculateSummary();
+		});
+
   	},
-    displayGraph: function() {
-      // this.retrieveResponsesFromDB()
-      // graph wont be ready without timeout
-      setTimeout(()=>{
-        if (!this.chart){
-          this.createChart();
-        } else {
-          this.updateChart();
+    calculateSummary: function () {
+      // average out summary for all
+      const all = this.summary.all;
+      all.task = round(all.task/all.totalResponses, 1);
+      all.relationship = round(all.relationship/all.totalResponses, 1);
+      // average out summary for male
+      const male = this.summary.male;
+      male.task = round(male.task/male.totalResponses, 1);
+      male.relationship = round(male.relationship/male.totalResponses, 1);
+      // average out summary for female
+      const female = this.summary.female;
+      female.task = round(female.task/female.totalResponses, 1);
+      female.relationship = round(female.relationship/female.totalResponses, 1);
+    },
+    resetSummary: function () {
+      // average out summary for all
+      const all = this.summary.all;
+      all.totalResponses = 0;
+      all.task = 0;
+      all.relationship = 0;
+      // average out summary for male
+      const male = this.summary.male;
+      male.totalResponses = 0;
+      male.task = 0;
+      male.relationship = 0;
+      // average out summary for female
+      const female = this.summary.female;
+      female.totalResponses = 0;
+      female.task = 0;
+      female.relationship = 0;
+    },
+    openTab: function(tabIndex) {
+      this.tabIndex = tabIndex;
+    },
+    promptDelete: function(email) {
+      swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.value) {
+          quiz2ColRef.doc(email).delete().then(function() {
+              console.log("Document successfully deleted!");
+          }).catch(function(error) {
+              console.error("Error removing document: ", error);
+          });
+          swal(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          )
         }
-      }, 500);
-
-      this.openModal();
-      return true;
+      })
     },
-    createChart: function() {
-      console.log('createChart');
-      this.chart = new Morris.Donut({
-        // ID of the element in which to draw the chart.
-        element: 'chart',
-        data: [
-          { label: 'Task', value: this.summary.task},
-          { label: 'Relationship', value: this.summary.relationship }
-        ],
-        colors: ['#EC407A', '#42A5F5']
-      });
-
+    promptEmail: function(email) {
+      swal({
+        title: 'Are you sure?',
+        text: "Results will be emailed to student once you confirm!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, send email!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.value) {
+          quiz2ColRef.doc(email).update({
+            emailResend: new Date()
+          }).then(function() {
+              console.log("Document successfully updated!");
+          }).catch(function(error) {
+              console.error("Error updating document: ", error);
+          });
+          swal(
+            'Sending email...',
+            `Result is being sent to ${email}. It may take awhile.`,
+            'success'
+          )
+        }
+      })
     },
-    updateChart: function() {
-      this.chart.setData([
-        { label: 'Task', value: this.summary.task},
-        { label: 'Relationship', value: this.summary.relationship }
-        ])
-    },
-    openModal: function() {
-      this.modalActive = true;
-    },
-    closeModal: function() {
-      this.modalActive = false;
-    }
+    getScorePercentage: function(category, score) {
+      switch(category) {
+          case 'task':
+              return round(score/50 * 100, 1) + '%';
+          case 'relationship':
+              return round(score/50 * 100, 1) + '%';
+      }
+  }
   },
 })

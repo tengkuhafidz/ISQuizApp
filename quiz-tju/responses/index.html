@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>IS3103 Quizes [Admin]</title>
+    <title>IS3103 Questionnaires [Admin]</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
     <link rel="stylesheet" href="../../css/styles.css">
     <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>
@@ -18,6 +18,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.26.28/sweetalert2.all.min.js"></script>
   </head>
   <body>
     <div id="admin">
@@ -27,7 +28,7 @@
             <div class="container">
               <div class="navbar-brand">
                 <a class="navbar-item title is-4">
-                  IS3103 Quizes
+                  IS3103 Questionnaires
                 </a>
                 <span class="navbar-burger burger" data-target="navbarMenuHeroB">
                   <span></span>
@@ -42,79 +43,114 @@
         <div class="hero-body">
           <div class="container has-text-centered">
             <h1 class="title is-1">
-              Leadership Style Quiz Responses
+              Leadership Style Questionnaire Responses
             </h1>
             <p class="subtitle">
-              View the responses for the quiz in realtime
+              View the responses for the questionnaire in realtime
             </p>
+            <a class="button is-light is-large is-outlined" href="../index.html" target="_blank"> View Questionnaire </a>
+
             <a class="button is-light is-large is-outlined" href="#quiz2"> View Responses </a>
           </div>
         </div>
       </section>
 
-      <section class="section" id="quiz2">
-        <div class="container">
+      <section class="section">
+        <div class="container" id="quiz2">
           <div class="columns">
             <div class="column ">
-              <h1 class="title">Responses for: <a href="../index.html" target="_blank">Leadership Style Quiz</a> </h1>
+              <div class="field is-horizontal">
+                <div class="field-label is-large">
+                  <label class="label">Responses from</label>
+                </div>
+                <div class="field-body">
+                  <div class="field">
+                    <div class="control">
+                        <div class="select is-medium is-fullwidth">
+                            <select v-model="classOf" @change="retrieveResponsesFromDB()">
+                              <option value="ay2018-2019sem2">AY2018-2019 Semester 2</option>
+                              <option value="all">All Classes</option>
+                            </select>
+                          </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <h2 class="subtitle">
                 The following are responses from the students, sorted according to the latest submission.
               </h2>
             </div>
-            <div class="column is-narrow has-text-right">
-              <button class="button is-medium is-info" @click="displayGraph">Visualise Responses</button>
-            </div>
           </div>
           <br />
-          <table class="table is-hoverable is-fullwidth is-striped animate-bottom">
+
+          <div class="tabs is-medium">
+              <ul>
+                <li :class="{'is-active': !tabIndex}" @click="openTab(0)"><a>Responses</a></li>
+                <li :class="{'is-active': tabIndex}" @click="openTab(1)"><a>Summary</a></li>
+              </ul>
+            </div>
+
+          <!-- Responses Tab -->          
+          <table v-if="!tabIndex" class="table is-hoverable is-fullwidth is-striped animate-bottom">
             <thead>
               <tr>
+                <th>Gender</th>
                 <th>Email</th>
                 <th>Result</th>
                 <th class="is-hidden-mobile">Task</th>
                 <th class="is-hidden-mobile">Relationship</th>
                 <th class="is-hidden-mobile">Timestamp</th>
+                <th class="is-hidden-mobile">Delete</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="response in responses">
-                <td>{{ response.student.email }}</td>
+                <td class="is-capitalized">{{ response.student.gender }}</td>
+                <td>
+                    {{ response.student.email }} <br />
+                    <button class="button is-info is-outlined is-small" @click="promptEmail(response.student.email)">Email Results</button>
+                  </td>
                 <td class="is-capitalized">{{ response.results.title }}</td>
                 <td class="is-hidden-mobile">{{ response.results.scores.task }}</td>
                 <td class="is-hidden-mobile">{{ response.results.scores.relationship }}</td>
                 <td class="is-hidden-mobile">{{ response.writtenAt }}</td>
+                <td class="is-hidden-mobile"><button class="button is-danger is-outlined" @click="promptDelete(response.student.email)">Delete</button></td>
               </tr>
             </tbody>
           </table>
-        </div>
 
-        <div class="modal" :class="{ 'is-active': modalActive }" id="modalGraph">
-          <div class="modal-background"></div>
-          <div class="modal-card">
-            <header class="modal-card-head">
-              <p class="modal-card-title">Visualise Responses</p>
-              <button class="delete" aria-label="close" @click="closeModal"></button>
-            </header>
-            <section class="modal-card-body" >
-              <div class="columns">
-                <div class="column">
-                  <div id="chart"></div>
-                </div>
-              </div>
-            </section>
-            <footer class="modal-card-foot">
-              <button class="button" @click="closeModal">Close</button>
-            </footer>
+          <!-- Summary tab -->
+          <table v-if="tabIndex" class="table is-striped" style="margin-right: auto; margin-left: auto">
+              <thead>
+                <tr>
+                  <th> Category </th>
+                  <th> Both ({{summary.all.totalResponses}})</th>
+                  <th> Male ({{summary.male.totalResponses}})</th>
+                  <th> Female ({{summary.female.totalResponses}})</th>
+                <tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>Task-Oriented</th>
+                  <td>{{ summary.all.task }} of 50 ({{ getScorePercentage('task', summary.all.task) }})</td>
+                  <td>{{ summary.male.task }} of 50 ({{ getScorePercentage('task', summary.male.task) }})</td>
+                  <td>{{ summary.female.task }} of 50 ({{ getScorePercentage('task', summary.female.task) }})</td>
+                </tr>
+                <tr>
+                  <th>Relationship-Oriented</th>
+                  <td>{{ summary.all.relationship }} of 50 ({{ getScorePercentage('relationship', summary.all.relationship) }})</td>
+                  <td>{{ summary.male.relationship }} of 50 ({{ getScorePercentage('relationship', summary.male.relationship) }})</td>
+                  <td>{{ summary.female.relationship }} of 20 ({{ getScorePercentage('relationship', summary.female.relationship) }})</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-        </div>
-
-      </section>
-    </div>
-
+        </section>
+      </div>
     <footer class="footer">
       <div class="content has-text-centered">
         <p>
-          <strong>Leadership Quizes</strong> for IS3103 module | NUS School of Computing
+          <strong>Leadership Questionnaires</strong> for IS3103 module | NUS School of Computing
         </p>
       </div>
     </footer>

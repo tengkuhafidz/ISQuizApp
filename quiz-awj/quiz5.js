@@ -22,7 +22,7 @@ const quiz5Questions = [
   { id: 21, text: 'Ingenuity is a characteristic which is important to me', category: 'Creative Personal Identity', score: 0 }
 ];
 
-// reference to quiz 4 document
+// reference to quiz 5 document
 const docRef = db.collection('quizes').doc('AWJdUqHCxiHL5XLzD6v1');
 
 Vue.component('question-section', {
@@ -39,7 +39,7 @@ var questions = new Vue({
   el: '#questions',
   data: {
     questionList: quiz5Questions,
-  	student: { email: null, gender: null },
+  	student: { email: null, gender: null, class: null },
     results: {
       title: null,
       totalScore: 0,
@@ -62,6 +62,10 @@ var questions = new Vue({
       gender: {
         hasError: false,
         message: null
+      },
+      class: {
+        hasError: false,
+        message: null
       }
     },
     attempts: 0,
@@ -72,27 +76,11 @@ var questions = new Vue({
       this.resetValidation();
       this.validateStudentEmail();
       this.validateStudentGender();
+      this.validateStudentClass();
+
       const results = this.calculateScore();
 
-      if (!this.errors.questions.hasError && !this.errors.email.hasError && !this.errors.gender.hasError) {
-        this.attempts++;
-        const resultsSection = document.getElementById("results");
-        resultsSection.style.padding='100px 0';
-
-        this.results = results;
-        goToAnchor('#results');
-        console.log('generateResult', this.results)
-
-        this.addToDB();
-      }
-    },
-    generateResult: function() {
-      this.resetValidation();
-      this.validateStudentEmail();
-      this.validateStudentGender();
-      const results = this.calculateScore();
-
-      if (!this.errors.questions.hasError && !this.errors.email.hasError && !this.errors.gender.hasError) {
+      if (!this.errors.questions.hasError && !this.errors.email.hasError && !this.errors.gender.hasError && !this.errors.class.hasError) {
         this.attempts++;
         const resultsSection = document.getElementById("results");
         resultsSection.style.padding='50px 0';
@@ -169,6 +157,13 @@ var questions = new Vue({
         this.errors.gender.message = "This field is required";
       }
     },
+    validateStudentClass: function() {
+      const studentClass = this.student.class;
+      if(!studentClass) {
+        this.errors.class.hasError = true;
+        this.errors.class.message = "This field is required";
+      }
+    },
     resetValidation: function() {
       this.errors.questions.hasError = false;
       this.errors.questions.message = null;
@@ -176,6 +171,8 @@ var questions = new Vue({
       this.errors.email.message = null;
       this.errors.gender.hasError = false;
       this.errors.gender.message = null;
+      this.errors.class.hasError = false;
+      this.errors.class.message = null;
     },
     addToDB: function() {
       docRef.collection('responses').doc(this.student.email).set({

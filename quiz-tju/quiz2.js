@@ -38,7 +38,7 @@ var questions = new Vue({
   el: '#questions',
   data: {
     questionList: quiz2Questions,
-  	student: { email: null },
+  	student: { email: null, gender: null, class: null },
     results: {
       title: null,
       score: {
@@ -54,6 +54,14 @@ var questions = new Vue({
       email: {
         hasError: false,
         message: null
+      },
+      gender: {
+        hasError: false,
+        message: null
+      },
+      class: {
+        hasError: false,
+        message: null
       }
     },
     attempts: 0,
@@ -63,9 +71,11 @@ var questions = new Vue({
     generateResult: function() {
       this.resetValidation();
       this.validateStudentEmail();
+      this.validateStudentGender();
+      this.validateStudentClass();
       const scores = this.calculateScore();
 
-      if (!this.errors.questions.hasError && !this.errors.email.hasError) {
+      if (!this.errors.questions.hasError && !this.errors.email.hasError && !this.errors.gender.hasError && !this.errors.class.hasError) {
         this.attempts++;
         const resultsSection = document.getElementById("results");
         resultsSection.style.padding='50px 0';
@@ -123,11 +133,29 @@ var questions = new Vue({
         this.student.email = this.student.email.toLowerCase();
       }
     },
+    validateStudentGender: function() {
+      const gender = this.student.gender;
+      if(!gender) {
+        this.errors.gender.hasError = true;
+        this.errors.gender.message = "This field is required";
+      }
+    },
+    validateStudentClass: function() {
+      const studentClass = this.student.class;
+      if(!studentClass) {
+        this.errors.class.hasError = true;
+        this.errors.class.message = "This field is required";
+      }
+    },
     resetValidation: function() {
       this.errors.questions.hasError = false;
       this.errors.questions.message = null;
       this.errors.email.hasError = false;
       this.errors.email.message = null;
+      this.errors.gender.hasError = false;
+      this.errors.gender.message = null;
+      this.errors.class.hasError = false;
+      this.errors.class.message = null;
     },
     addToDB: function() {
       docRef.collection('responses').doc(this.student.email).set({

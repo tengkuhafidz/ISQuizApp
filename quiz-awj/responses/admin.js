@@ -3,12 +3,7 @@ const quiz5ColRef = db.collection('quizes').doc('AWJdUqHCxiHL5XLzD6v1').collecti
 var quiz5Responses = new Vue({
   el: '#quiz5',
   data: {
-    dbRequest: {
-      isLoading: true,
-      hasError: false,
-      queriedAt: null
-    },
-    modalActive: false,
+    classOf: 'ay2018-2019sem2',
     responses: [],
     summary: {
       all: {
@@ -41,7 +36,14 @@ var quiz5Responses = new Vue({
   },
   methods: {
   	retrieveResponsesFromDB: function() {
-  		quiz5ColRef.orderBy("writtenAt", "desc").onSnapshot((querySnapshot) => {
+      // set ref to the entire responses by default
+      let ref = quiz5ColRef;
+
+      // if class is not 'ay2018-2019sem1' (its unfilterable at the moment), then filter according to selected class
+      if (this.classOf !== 'all') {
+        ref = quiz5ColRef.where("student.class", "==", this.classOf);
+      } 
+  		ref.orderBy("writtenAt", "desc").onSnapshot((querySnapshot) => {
   			this.responses = [];
         this.resetSummary();
   	    querySnapshot.forEach((doc) => {

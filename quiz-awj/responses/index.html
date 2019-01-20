@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>IS3103 Quizes [Admin]</title>
+    <title>IS3103 Questionnaires [Admin]</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
     <link rel="stylesheet" href="../../css/styles.css">
     <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>
@@ -28,7 +28,7 @@
             <div class="container">
               <div class="navbar-brand">
                 <a class="navbar-item title is-4">
-                  IS3103 Quizzes
+                  IS3103 Questionnaires
                 </a>
                 <span class="navbar-burger burger" data-target="navbarMenuHeroB">
                   <span></span>
@@ -46,8 +46,9 @@
               Creative Perception Survey
             </h1>
             <p class="subtitle">
-              View the responses of the quiz in realtime
+              View the responses of the questionnaire in realtime
             </p>
+            <a class="button is-light is-large is-outlined" href="../index.html" target="_blank"> View Questionnaire </a>
             <a class="button is-light is-large is-outlined" href="#quiz5"> View Responses </a>
           </div>
         </div>
@@ -57,14 +58,27 @@
         <div class="container">
           <div class="columns">
             <div class="column ">
-              <h1 class="title">Responses for: <a href="../index.html" target="_blank">Creative Perception Survey</a> </h1>
+              <div class="field is-horizontal">
+                <div class="field-label is-large">
+                  <label class="label">Responses from</label>
+                </div>
+                <div class="field-body">
+                  <div class="field">
+                    <div class="control">
+                        <div class="select is-medium is-fullwidth">
+                            <select v-model="classOf" @change="retrieveResponsesFromDB()">
+                              <option value="ay2018-2019sem2">AY2018-2019 Semester 2</option>
+                              <option value="all">All Classes</option>
+                            </select>
+                          </div>
+                    </div>
+                  </div>
+                </div>
+              </div>              
               <h2 class="subtitle">
                 The following are responses from the students, sorted according to the latest submission.
               </h2>
             </div>
-<!--             <div class="column is-narrow has-text-right">
-              <button class="button is-medium is-info" @click="displayGraph">Visualise Responses</button>
-            </div> -->
           </div>
           <br />
 
@@ -111,9 +125,9 @@
             <thead>
               <tr>
                 <th> Category </th>
-                <th> Both </th>
-                <th> Male </th>
-                <th> Female </th>
+                <th> Both ({{summary.all.totalResponses}})</th>
+                <th> Male ({{summary.male.totalResponses}})</th>
+                <th> Female ({{summary.female.totalResponses}})</th>
               <tr>
             </thead>
             <tbody>
@@ -150,7 +164,7 @@
     <footer class="footer">
       <div class="content has-text-centered">
         <p>
-          <strong>Leadership Quizes</strong> for IS3103 module | NUS School of Computing
+          <strong>Leadership Questionnaires</strong> for IS3103 module | NUS School of Computing
         </p>
       </div>
     </footer>

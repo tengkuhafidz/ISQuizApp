@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>IS3103 Quizes</title>
+    <title>IS3103 Questionnaires</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
@@ -27,7 +27,7 @@
           <div class="container">
             <div class="navbar-brand">
               <a class="navbar-item title is-4">
-                IS3103 Quizes
+                IS3103 Questionnaires
               </a>
             </div>
           </div>
@@ -41,10 +41,10 @@
             Leadership Communication Style
           </h1>
           <h2 class="subtitle">
-            Find out your leadership communication style preference by taking this quiz
+            Find out your leadership communication style preference by taking this questionnaire
           </h2>
           <br />
-          <a class="button is-primary is-inverted is-outlined is-large" onclick="goToAnchor('#directions')">Start Quiz</a>
+          <a class="button is-primary is-inverted is-outlined is-large" onclick="goToAnchor('#directions')">Start Questionnaire</a>
         </div>
       </div>
     </section>
@@ -123,39 +123,67 @@
       </question-section>
 
       <section class="section has-background-dark" id="identityForm">
-        <div class="container">
-          <h1 class="title has-text-white is-4">Final Step</h1>
-          <h2 class="subtitle has-text-white">
-            Please input the following identity information to generate your results. The results will also be emailed to you.
-          </h2>
-          <div class="field is-horizontal is-grouped ">
-            <div class="field-body">
-              <div class="field">
-                <p class="control is-expanded has-icons-left has-icons-right">
-                  <input class="input is-medium" :class="{ 'is-danger': errors.email.hasError }" type="email" placeholder="NUS Email" v-model="student.email">
-                  <span class="icon is-normal is-left">
-                    <i class="fas fa-envelope"></i>
-                  </span>
-                </p>
-                <p v-if="errors.email.hasError" class="help is-danger">
-                  {{ errors.email.message }}
-                </p>
+          <div class="container">
+            <h1 class="title has-text-white is-4">Final Step</h1>
+            <h2 class="subtitle has-text-white">
+              Please input the following identity information to generate your results. The results will also be emailed to you.
+            </h2>
+            
+            <div class="field is-horizontal is-grouped">
+              <div class="field-body">
+                  <div class="field">
+                      <div class="control">
+                        <div class="select is-medium is-fullwidth" :class="{ 'is-danger': errors.class.hasError }">
+                          <select v-model="student.class">
+                            <option :value="null"  disabled>Class</option>
+                            <option value="ay2018-2019sem2">AY2018-2019 Semester 2</option>
+                          </select>
+                        </div>
+                        <p v-if="errors.class.hasError" class="help is-danger">
+                            {{ errors.class.message }}
+                          </p>
+                      </div>
+                    </div>
+                <div class="field">
+                  <div class="control">
+                    <div class="select is-medium is-fullwidth" :class="{ 'is-danger': errors.gender.hasError }">
+                      <select v-model="student.gender">
+                        <option :value="null"  disabled>Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                      </select>
+                    </div>
+                    <p v-if="errors.gender.hasError" class="help is-danger">
+                        {{ errors.gender.message }}
+                      </p>
+                  </div>
+                </div>
+                <div class="field">
+                  <p class="control is-expanded has-icons-left has-icons-right">
+                    <input class="input is-medium" :class="{ 'is-danger': errors.email.hasError }" type="email" placeholder="NUS Email" v-model="student.email">
+                    <span class="icon is-normal is-left">
+                      <i class="fas fa-envelope"></i>
+                    </span>
+                  </p>
+                  <p v-if="errors.email.hasError" class="help is-danger">
+                    {{ errors.email.message }}
+                  </p>
+                </div>
+                  <p class="control">
+                    <a class="button is-primary is-medium" @click="generateResult">
+                      Submit
+                    </a>
+                  </p>
               </div>
-                <p class="control">
-                  <a class="button is-primary is-medium" @click="generateResult">
-                    Submit
-                  </a>
-                </p>
             </div>
+            <article v-if="errors.questions.hasError" class="message is-danger">
+              <div class="message-body">
+                <p>
+                 {{ errors.questions.message }}
+                <p>
+            </article>
           </div>
-          <article v-if="errors.questions.hasError" class="message is-danger">
-            <div class="message-body">
-              <p>
-               {{ errors.questions.message }}
-              <p>
-          </article>
-        </div>
-      </section>
+        </section>
 
       <section id="results">
         <div class="container has-text-centered" v-show="attempts > 0 && !errors.questions.hasError && !errors.email.hasError">
@@ -170,7 +198,7 @@
     <footer class="footer">
       <div class="content has-text-centered">
         <p>
-          <strong>Leadership Quizes</strong> for IS3103 module | NUS School of Computing
+          <strong>Leadership Questionnaires</strong> for IS3103 module | NUS School of Computing
         </p>
       </div>
     </footer>

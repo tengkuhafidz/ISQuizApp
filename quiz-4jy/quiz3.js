@@ -46,7 +46,7 @@ var questions = new Vue({
   el: '#questions',
   data: {
     questionList: quiz3Questions,
-  	student: { email: null, gender: null },
+  	student: { email: null, gender: null, class: null },
     results: {
       scores: {
         articulateVision: 0,
@@ -79,6 +79,10 @@ var questions = new Vue({
       gender: {
         hasError: false,
         message: null
+      },
+      class: {
+        hasError: false,
+        message: null
       }
     },
     attempts: 0,
@@ -90,8 +94,9 @@ var questions = new Vue({
       this.validateStudentEmail();
       this.validateStudentGender();
       const results = this.calculateScore();
+      this.validateStudentClass();
 
-      if (!this.errors.questions.hasError && !this.errors.email.hasError && !this.errors.gender.hasError) {
+      if (!this.errors.questions.hasError && !this.errors.email.hasError && !this.errors.gender.hasError & !this.errors.class.hasError) {
         this.attempts++;
         const resultsSection = document.getElementById("results");
         resultsSection.style.padding='100px 0';
@@ -189,6 +194,13 @@ var questions = new Vue({
         this.errors.gender.message = "This field is required";
       }
     },
+    validateStudentClass: function() {
+      const studentClass = this.student.class;
+      if(!studentClass) {
+        this.errors.class.hasError = true;
+        this.errors.class.message = "This field is required";
+      }
+    },
     resetValidation: function() {
       this.errors.questions.hasError = false;
       this.errors.questions.message = null;
@@ -196,6 +208,8 @@ var questions = new Vue({
       this.errors.email.message = null;
       this.errors.gender.hasError = false;
       this.errors.gender.message = null;
+      this.errors.class.hasError = false;
+      this.errors.class.message = null;
     },
     addToDB: function() {
       docRef.collection('responses').doc(this.student.email).set({

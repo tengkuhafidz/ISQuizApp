@@ -3,12 +3,7 @@ const quiz4ColRef = db.collection('quizes').doc('avHls1vanK3UTWZJDewz').collecti
 var quiz4Responses = new Vue({
   el: '#quiz4',
   data: {
-    dbRequest: {
-      isLoading: true,
-      hasError: false,
-      queriedAt: null
-    },
-    modalActive: false,
+    classOf: 'ay2018-2019sem2',
     responses: [],
     summary: {
       all: {
@@ -16,18 +11,21 @@ var quiz4Responses = new Vue({
         affectiveIdentify: 0,
         noncalculative: 0,
         socialNormative: 0,
+        total: 0,
       },
       male: {
         totalResponses: 0,
         affectiveIdentify: 0,
         noncalculative: 0,
         socialNormative: 0,
+        total: 0,
       },
       female: {
         totalResponses: 0,
         affectiveIdentify: 0,
         noncalculative: 0,
         socialNormative: 0,
+        total: 0,
       }
     },
     tabIndex: 0,
@@ -38,7 +36,15 @@ var quiz4Responses = new Vue({
   },
   methods: {
   	retrieveResponsesFromDB: function() {
-  		quiz4ColRef.orderBy("writtenAt", "desc").onSnapshot((querySnapshot) => {
+  		// set ref to the entire responses by default
+      let ref = quiz4ColRef;
+
+      // if class is not 'ay2018-2019sem1' (its unfilterable at the moment), then filter according to selected class
+      if (this.classOf !== 'all') {
+        ref = quiz4ColRef.where("student.class", "==", this.classOf);
+      } 
+        
+  		ref.orderBy("writtenAt", "desc").onSnapshot((querySnapshot) => {
   			this.responses = [];
         this.resetSummary();
   	    querySnapshot.forEach((doc) => {
@@ -74,16 +80,21 @@ var quiz4Responses = new Vue({
       all.affectiveIdentify = round(all.affectiveIdentify/all.totalResponses, 1);
       all.noncalculative = round(all.noncalculative/all.totalResponses, 1);
       all.socialNormative = round(all.socialNormative/all.totalResponses, 1);
+      all.total = round(all.affectiveIdentify + all.noncalculative + all.socialNormative, 1);
       // average out summary for male
       const male = this.summary.male;
       male.affectiveIdentify = round(male.affectiveIdentify/male.totalResponses, 1);
       male.noncalculative = round(male.noncalculative/male.totalResponses, 1);
       male.socialNormative = round(male.socialNormative/male.totalResponses, 1);
+      male.total = round(male.affectiveIdentify + male.noncalculative + male.socialNormative, 1);
+
       // average out summary for female
       const female = this.summary.female;
       female.affectiveIdentify = round(female.affectiveIdentify/female.totalResponses, 1);
       female.noncalculative = round(female.noncalculative/female.totalResponses, 1);
       female.socialNormative = round(female.socialNormative/female.totalResponses, 1);
+      female.total = round(female.affectiveIdentify + female.noncalculative + female.socialNormative, 1);
+
     },
     resetSummary: function () {
       // average out summary for all
@@ -92,18 +103,21 @@ var quiz4Responses = new Vue({
       all.affectiveIdentify = 0;
       all.noncalculative = 0;
       all.socialNormative = 0;
+      all.total = 0;
       // average out summary for male
       const male = this.summary.male;
       male.totalResponses = 0;
       male.affectiveIdentify = 0;
       male.noncalculative = 0;
       male.socialNormative = 0;
+      all.total = 0;
       // average out summary for female
       const female = this.summary.female;
       female.totalResponses = 0;
       female.affectiveIdentify = 0;
       female.noncalculative = 0;
       female.socialNormative = 0;
+      all.total = 0;
     },
     openTab: function(tabIndex) {
       this.tabIndex = tabIndex;

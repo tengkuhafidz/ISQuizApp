@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>IS3103 Quizes</title>
+    <title>IS3103 Questionnaires</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
@@ -32,7 +32,7 @@
           <div class="container">
             <div class="navbar-brand">
               <a class="navbar-item title is-4">
-                IS3103 Quizes
+                IS3103 Questionnaires
               </a>
             </div>
           </div>
@@ -49,7 +49,7 @@
             Find out your transformational leadership scale by taking taking this questionnaire
           </h2>
           <br />
-          <a class="button is-primary is-inverted is-outlined is-large" onclick="goToAnchor('#directions')">Start Quiz</a>
+          <a class="button is-primary is-inverted is-outlined is-large" onclick="goToAnchor('#directions')">Start Questionnaire</a>
         </div>
       </div>
     </section>
@@ -148,6 +148,19 @@
           
           <div class="field is-horizontal is-grouped">
             <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                      <div class="select is-medium is-fullwidth" :class="{ 'is-danger': errors.class.hasError }">
+                        <select v-model="student.class">
+                          <option :value="null"  disabled>Class</option>
+                          <option value="ay2018-2019sem2">AY2018-2019 Semester 2</option>
+                        </select>
+                      </div>
+                      <p v-if="errors.class.hasError" class="help is-danger">
+                          {{ errors.class.message }}
+                        </p>
+                    </div>
+                  </div>
               <div class="field">
                 <div class="control">
                   <div class="select is-medium is-fullwidth" :class="{ 'is-danger': errors.gender.hasError }">
@@ -239,7 +252,7 @@
     <footer class="footer">
       <div class="content has-text-centered">
         <p>
-          <strong>Leadership Quizes</strong> for IS3103 module | NUS School of Computing
+          <strong>Leadership Questionnaire<s/strong> for IS3103 module | NUS School of Computing
         </p>
       </div>
     </footer>
