@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>IS3103 Quizes [Admin]</title>
+    <title>IS3103 Questionnaires [Admin]</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
     <link rel="stylesheet" href="../css/styles.css">
     <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>
@@ -16,127 +16,167 @@
   </head>
   <body>
     <div id="admin">
-      <section class="hero is-dark is-fullheight is-bold">
-        <div class="hero-head">
-          <nav class="navbar">
-            <div class="container">
-              <div class="navbar-brand">
-                <a class="navbar-item title is-4">
-                  IS3103 Quizes
-                </a>
-                <span class="navbar-burger burger" data-target="navbarMenuHeroB">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </span>
-              </div>
-            </div>
-          </nav>
-        </div>
-
+      <section class="hero is-dark">
         <div class="hero-body">
-          <div class="container has-text-centered">
-            <p class="title is-1">
+          <div class="container">
+            <h1 class="title">
               Admin View
-            </p>
-            <p class="subtitle">
-              Select the IS3103 Quiz results you want to look at
-            </p>
-            <div class="columns">
-              <div class="field column is-6 is-offset-3">
-                <div class="control is-expanded">
-                  <div class="select is-medium is-fullwidth">
-                    <select id="quizOptions" v-model="selectedQuiz">
-                      <option>Select Quiz</option>
-                      <option>Leadership Communication Style Preference</option>
-                    </select>
-                  </div>
+            </h1>
+            <h2 class="subtitle">
+              Displaying links to all pages of this web application
+            </h2>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="questionnaires">
+
+        <div class="container">
+          <h1 class="title">All Questionnaires</h1>
+
+          <div class="columns is-multiline">              
+            <div class="column is-one-third">
+              <div class="card">
+                <div class="card-content" style="height: 100px;">
+                  <p class="title is-size-4">
+                    1. Leadership Communication Style
+                  </p>
                 </div>
+                <footer class="card-footer">
+                  <p class="card-footer-item">
+                    <span>
+                      View <a target="_blank" href="../quiz-mi7/index.html">Questionnaire</a>
+                    </span>
+                  </p>
+                  <p class="card-footer-item">
+                    <span>
+                      View <a target="_blank" href="../quiz-mi7/responses/index.html">Responses</a>
+                    </span>
+                  </p>
+                </footer>
               </div>
             </div>
+            
+            <div class="column is-one-third">
+              <div class="card">
+                <div class="card-content" style="height: 100px;">
+                  <p class="title is-size-4">
+                    2. Leadership Style
+                  </p>
+                </div>
+                <footer class="card-footer">
+                  <p class="card-footer-item">
+                    <span>
+                      View <a target="_blank" href="../quiz-tju/index.html">Questionnaire</a>
+                    </span>
+                  </p>
+                  <p class="card-footer-item">
+                    <span>
+                      Share <a target="_blank" href="../quiz-tju/responses/index.html">Responses</a>
+                    </span>
+                  </p>
+                </footer>
+              </div>
+            </div>
+
+            <div class="column is-one-third">
+              <div class="card">
+                <div class="card-content" style="height: 100px;">
+                  <p class="title is-size-4">
+                    3. Transformational Leadership Scale
+                  </p>
+                </div>
+                <footer class="card-footer">
+                  <p class="card-footer-item">
+                    <span>
+                      View <a target="_blank" href="../quiz-4jy/index.html">Questionnaire</a>
+                    </span>
+                  </p>
+                  <p class="card-footer-item">
+                    <span>
+                      Share <a target="_blank" href="../quiz-4jy/responses/index.html">Responses</a>
+                    </span>
+                  </p>
+                </footer>
+              </div>
+            </div>
+
+            <div class="column is-one-third">
+              <div class="card">
+                <div class="card-content" style="height: 100px;">
+                  <p class="title is-size-4">
+                    4. Motivation To Lead Scale
+                  </p>
+                </div>
+                <footer class="card-footer">
+                  <p class="card-footer-item">
+                    <span>
+                      View <a target="_blank" href="../quiz-avh/index.html">Questionnaire</a>
+                    </span>
+                  </p>
+                  <p class="card-footer-item">
+                    <span>
+                      View <a target="_blank" href="../quiz-avh/responses/index.html">Responses</a>
+                    </span>
+                  </p>
+                </footer>
+              </div>
+            </div>
+            
+            <div class="column is-one-third">
+              <div class="card">
+                <div class="card-content" style="height: 100px;">
+                    <p class="title is-size-4">
+                    5. Creative Perception Survey
+                  </p>
+                </div>
+                <footer class="card-footer">
+                  <p class="card-footer-item">
+                    <span>
+                      View <a target="_blank" href="../quiz-awj/index.html">Questionnaire</a>
+                    </span>
+                  </p>
+                  <p class="card-footer-item">
+                    <span>
+                      Share <a target="_blank" href="../quiz-awj/responses/index.html">Responses</a>
+                    </span>
+                  </p>
+                </footer>
+              </div>
+            </div>
+
+            <div class="column is-one-third">
+              <div class="card">
+                <div class="card-content" style="height: 100px;">
+                  <p class="title is-size-4">
+                    6. Self-Perception of Leadership Skills
+                  </p>
+                </div>
+                <footer class="card-footer">
+                  <p class="card-footer-item">
+                    <span>
+                      View <a target="_blank" href="../quiz-oef/index.html">Questionnaire</a>
+                    </span>
+                  </p>
+                  <p class="card-footer-item">
+                    <span>
+                      Share <a target="_blank" href="../quiz-oef/responses/index.html">Responses</a>
+                    </span>
+                  </p>
+                </footer>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
 
-      <section class="section" id="quiz1" v-if="selectedQuiz = 'quiz1'">
+      <section class="section">
         <div class="container">
-          <div class="columns">
-            <div class="column ">
-              <h1 class="title">Responses for: <a href="../quiz1" target="_blank">Leadership Communication Style Quiz</a> </h1>
-              <h2 class="subtitle">
-                The following are responses from the students, sorted according to the latest submission.
-              </h2>
-            </div>
-            <div class="column is-narrow has-text-right">
-              <button class="button is-large is-info" @click="retrieveResponsesFromDB">Refresh Data</button>
-              <p class="subtitle is-7">Last queried: {{ dbRequest.queriedAt }}</p>
-            </div>
-          </div>
-          <br />
-
-          <div v-if="dbRequest.isLoading" id="loader"></div>
-          <table class="table is-hoverable is-fullwidth is-striped animate-bottom">
-            <thead>
-              <tr>
-                <th>Email</th>
-                <th>Result</th>
-                <th class="is-hidden-mobile">Authoritarian</th>
-                <th class="is-hidden-mobile">Democratic</th>
-                <th class="is-hidden-mobile">Laissez-Faire</th>
-                <th class="is-hidden-mobile">Timestamp</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="response in responses">
-                <td>{{ response.student.email }}</td>
-                <td class="is-capitalized">{{ response.results.title }}</td>
-                <td class="is-hidden-mobile">{{ response.results.scores.authoritarian }}</td>
-                <td class="is-hidden-mobile">{{ response.results.scores.democratic }}</td>
-                <td class="is-hidden-mobile">{{ response.results.scores.laissezFaire }}</td>
-                <td class="is-hidden-mobile">{{ response.writtenAt }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="section" id="quiz2" v-if="selectedQuiz = 'quiz2'">
-        <div class="container">
-          <div class="columns">
-            <div class="column ">
-              <h1 class="title">Responses for: <a href="../quiz2" target="_blank">Leadership Style Quiz</a> </h1>
-              <h2 class="subtitle">
-                The following are responses from the students, sorted according to the latest submission.
-              </h2>
-            </div>
-            <div class="column is-narrow has-text-right">
-              <button class="button is-large is-info" @click="retrieveResponsesFromDB">Refresh Data</button>
-              <p class="subtitle is-7">Last queried: {{ dbRequest.queriedAt }}</p>
-            </div>
-          </div>
-          <br />
-
-          <div v-if="dbRequest.isLoading" id="loader"></div>
-          <table class="table is-hoverable is-fullwidth is-striped animate-bottom">
-            <thead>
-              <tr>
-                <th>Email</th>
-                <th>Result</th>
-                <th class="is-hidden-mobile">Task</th>
-                <th class="is-hidden-mobile">Relationship</th>
-                <th class="is-hidden-mobile">Timestamp</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="response in responses">
-                <td>{{ response.student.email }}</td>
-                <td class="is-capitalized">{{ response.results.title }}</td>
-                <td class="is-hidden-mobile">{{ response.results.scores.task }}</td>
-                <td class="is-hidden-mobile">{{ response.results.scores.relationship }}</td>
-                <td class="is-hidden-mobile">{{ response.writtenAt }}</td>
-              </tr>
-            </tbody>
-          </table>
+          <h1 class="title">Other Links</h1>
+          <ul>
+            <li><a href="../send-results/index.html" tag>Send Student All Results via Email</a></li>
+          </ul>
         </div>
       </section>
     </div>
@@ -144,7 +184,7 @@
     <footer class="footer">
       <div class="content has-text-centered">
         <p>
-          <strong>Leadership Quizes</strong> for IS3103 module | NUS School of Computing
+          <strong>Leadership Questionnaires</strong> for IS3103 module | NUS School of Computing
         </p>
       </div>
     </footer>
