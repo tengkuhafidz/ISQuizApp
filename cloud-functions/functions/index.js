@@ -4,6 +4,8 @@ admin.initializeApp();
 
 var nodemailer = require('nodemailer');
 
+const constants = require('./constants');
+
 exports.emailResultsOnWrite = functions.firestore
     .document('quizes/{quizId}/responses/{responseId}')
     .onWrite((change, context) => {
@@ -18,10 +20,7 @@ exports.emailResultsOnWrite = functions.firestore
 const sendMail = (mailOptions) => {
 	var transporter = nodemailer.createTransport({
 	 service: 'gmail',
-	 auth: {
-	        user: 'IS3103Quiz@gmail.com',
-	        pass: 'leadership!'
-	    }
+	 auth: constants.GMAIL_AUTH
 	});
 
 	transporter.sendMail(mailOptions, (err, info) => {
@@ -52,7 +51,7 @@ const getMailOptions = (quizId, email, results) => {
 
 const craftQuiz1MailOptions = (email, results) => {
   const mailOptions = {
-      from: 'IS3103 Quiz <IS3103Quiz@gmail.com>',
+      from: 'IS3103 Questionnaire <IS3103Quiz@gmail.com>',
       to: email, // list of receivers
       subject: 'Your Results: Leadership Communication Style Preference Quiz', // Subject line
       html: `<p> Hi, </p>
