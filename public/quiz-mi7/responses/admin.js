@@ -3,7 +3,8 @@ const quiz1ColRef = db.collection('quizes').doc('mI7FH4zvco1P92ChrFDF').collecti
 var quiz1Responses = new Vue({
   el: '#quiz1',
   data: {
-    classOf: 'ay2018-2019sem2',
+    classOf: null,
+    allClasses: null,
 		responses: [],
 		summary: {
 			all: {
@@ -27,9 +28,14 @@ var quiz1Responses = new Vue({
     moment: moment
 	},
   mounted () {
+    this.initialiseSemesters();
     this.retrieveResponsesFromDB();
   },
   methods: {
+    initialiseSemesters: function() {
+      this.classOf = currentSemester();
+      this.allClasses = getAllSemesters();
+    },
   	retrieveResponsesFromDB: function() {
 			// set ref to the entire responses by default
       let ref = quiz1ColRef;
@@ -46,7 +52,7 @@ var quiz1Responses = new Vue({
 		        //ensure this.responses is empty
 		        const response = doc.data();
 		        // format timestamp
-		        response.writtenAt = moment(response.writtenAt.seconds * 1000).format('Do MMM (ddd), h:mm a');
+		        response.writtenAt = moment(response.writtenAt.seconds * 1000).format('Do MMM YYYY h:mm a');
 						this.responses.push(response);
 						const scores = response.results.scores;
 						// Initialising results in summary categories
@@ -168,6 +174,39 @@ var quiz1Responses = new Vue({
             case 'laissezFaire':
                 return round(score/20 * 100, 1) + '%';
         }
+    },
+    prepareCSV: function() {
+      const csvData = [];
+      for(let response of this.responses) {
+        const { email, gender } = response.student;
+        const semester = response.student.class;
+        const submittedAt = response.writtenAt;
+        // consolidate info of user and submission time
+        const singleData = {
+          submittedAt,
+          email,
+          gender,
+          semester,
+        }
+        // consolidate categorical scores
+        const categories = Object.keys(response.results.scores);
+        for(let category of categories) {
+          singleData[category] = response.results.scores[category];
+        }
+        // consolidate individual qn scores
+        const { rawInputs } = response;
+        //check if it exists as earlier version does not include rawInputs
+        if(rawInputs) {
+          for(let [index, rawInput] of rawInputs.entries()) {
+            singleData[`question ${index + 1}`] = rawInput.score;
+          }
+        }        
+        csvData.push(singleData);
+      }
+      return csvData;
+    },
+    downloadCSV: function() {
+      downloadCSV({ filename: `Leadership Communication Style - ${this.classOf}.csv` }, this.prepareCSV())
     }
-  },
+  }
 })

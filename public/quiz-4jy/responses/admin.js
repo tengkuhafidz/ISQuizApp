@@ -1,9 +1,10 @@
 const quiz3ColRef = db.collection('quizes').doc('4JYTDqsFZoWyfRSUEuoe').collection('responses');
 
-var quiz2Responses = new Vue({
-  el: '#quiz2',
+var quiz3Responses = new Vue({
+  el: '#quiz3',
   data: {
-    classOf: 'ay2018-2019sem2',
+    classOf: null,
+    allClasses: null,
     responses: [],
     summary: {
       all: {
@@ -41,9 +42,14 @@ var quiz2Responses = new Vue({
     moment: moment
   },
   mounted () {
+    this.initialiseSemesters();
     this.retrieveResponsesFromDB();
   },
   methods: {
+    initialiseSemesters: function() {
+      this.classOf = currentSemester();
+      this.allClasses = getAllSemesters();
+    },
   	retrieveResponsesFromDB: function() {
   		// set ref to the entire responses by default
       let ref = quiz3ColRef;
@@ -56,13 +62,11 @@ var quiz2Responses = new Vue({
   		ref.orderBy("writtenAt", "desc").onSnapshot((querySnapshot) => {
   			this.responses = [];
         this.resetSummary();
-        console.log('1')
   	    querySnapshot.forEach((doc) => {
-        console.log('2')
           //ensure this.responses is empty
           const response = doc.data();
           // format timestamp
-          response.writtenAt = moment(response.writtenAt.seconds * 1000).format('Do MMM (ddd), h:mm a');
+          response.writtenAt = moment(response.writtenAt.seconds * 1000).format('Do MMM YYYY h:mm a');
           this.responses.push(response);
           const scores = response.results.scores;
           // summary calculation
@@ -93,8 +97,7 @@ var quiz2Responses = new Vue({
             this.summary.female.roleModel += scores.roleModel;
             this.summary.female.transactionalLeaderBehaviour += scores.transactionalLeaderBehaviour;
           }
-  	    });
-        console.log('this.summary.male.total)', this.summary.male.total)
+        });
         this.calculateSummary();
 		  })
   	},
@@ -213,5 +216,38 @@ var quiz2Responses = new Vue({
         }
       })
     },
-  },
+    prepareCSV: function() {
+      const csvData = [];
+      for(let response of this.responses) {
+        const { email, gender } = response.student;
+        const semester = response.student.class;
+        const submittedAt = response.writtenAt;
+        // consolidate info of user and submission time
+        const singleData = {
+          submittedAt,
+          email,
+          gender,
+          semester,
+        }
+        // consolidate categorical scores
+        const categories = Object.keys(response.results.scores);
+        for(let category of categories) {
+          singleData[category] = response.results.scores[category];
+        }
+        // consolidate individual qn scores
+        const { rawInputs } = response;
+        //check if it exists as earlier version does not include rawInputs
+        if(rawInputs) {
+          for(let [index, rawInput] of rawInputs.entries()) {
+            singleData[`question ${index + 1}`] = rawInput.score;
+          }
+        }        
+        csvData.push(singleData);
+      }
+      return csvData;
+    },
+    downloadCSV: function() {
+      downloadCSV({ filename: `Transformational Leadership Scale - ${this.classOf}.csv` }, this.prepareCSV())
+    }
+  }
 })

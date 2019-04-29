@@ -72,10 +72,6 @@ var questions = new Vue({
       gender: {
         hasError: false,
         message: null
-      },
-      class: {
-        hasError: false,
-        message: null
       }
     },
     attempts: 0,
@@ -83,14 +79,15 @@ var questions = new Vue({
   },
   methods: {
     generateResult: function() {
+      // auto detect semester
+      this.student.class = currentSemester();
       this.resetValidation();
       this.validateStudentEmail();
       this.validateStudentGender();
-      this.validateStudentClass();
 
       const results = this.calculateScore();
 
-      if (!this.errors.questions.hasError && !this.errors.email.hasError && !this.errors.gender.hasError && !this.errors.class.hasError) {
+      if (!this.errors.questions.hasError && !this.errors.email.hasError && !this.errors.gender.hasError) {
         this.attempts++;
         const resultsSection = document.getElementById("results");
         resultsSection.style.padding='50px 0';
@@ -182,13 +179,12 @@ var questions = new Vue({
       this.errors.email.message = null;
       this.errors.gender.hasError = false;
       this.errors.gender.message = null;
-      this.errors.class.hasError = false;
-      this.errors.class.message = null;
     },
     addToDB: function() {
       docRef.collection('responses').doc(this.student.email).set({
         results: this.results,
         student: this.student,
+        rawInputs: this.questionList,
         writtenAt: new Date()
       })
       .then(function(doc) {

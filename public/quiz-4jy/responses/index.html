@@ -49,12 +49,12 @@
               View the responses for the questionnaires in realtime
             </p>
             <a class="button is-light is-large is-outlined" href="../index.html" target="_blank"> View Questionnaire </a>
-            <a class="button is-light is-large is-outlined" href="#quiz2"> View Responses </a>
+            <a class="button is-light is-large is-outlined" href="#quiz3"> View Responses </a>
           </div>
         </div>
       </section>
 
-      <section class="section" id="quiz2">
+      <section class="section" id="quiz3">
         <div class="container">
           <div class="columns">
             <div class="column ">
@@ -63,14 +63,17 @@
                   <label class="label">Responses from</label>
                 </div>
                 <div class="field-body">
-                  <div class="field">
-                    <div class="control">
+                  <div class="field has-addons">
+                    <div class="control is-expanded">
                         <div class="select is-medium is-fullwidth">
                             <select v-model="classOf" @change="retrieveResponsesFromDB()">
-                              <option value="ay2018-2019sem2">AY2018-2019 Semester 2</option>
+                              <option v-for="singleClass in allClasses" :value="singleClass">{{ singleClass.toUpperCase() }}</option>
                               <option value="all">All Classes</option>
                             </select>
                           </div>
+                    </div>
+                    <div class="control">
+                      <button type="button" class="button is-primary is-medium" @click="downloadCSV">Export to CSV</button>
                     </div>
                   </div>
                 </div>

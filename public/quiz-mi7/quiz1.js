@@ -40,10 +40,6 @@ var questions = new Vue({
         hasError: false,
         message: null
       },
-      class: {
-        hasError: false,
-        message: null
-      }
     },
     attempts: 0,
     pieChart: null
@@ -53,13 +49,14 @@ var questions = new Vue({
   },
   methods: {
     generateResult: function() {
+      // auto detect semester
+      this.student.class = currentSemester();
       this.resetValidation();
       this.validateStudentEmail();
       this.validateStudentGender();
-      this.validateStudentClass();
 
       const scores = this.calculateScore();
-      if (!this.errors.questions.hasError && !this.errors.email.hasError && !this.errors.class.hasError) {
+      if (!this.errors.questions.hasError && !this.errors.email.hasError) {
         this.attempts++;
         const resultsSection = document.getElementById("results");
         resultsSection.style.padding='50px 0';
@@ -129,13 +126,6 @@ var questions = new Vue({
         this.errors.gender.message = "This field is required";
       }
     },
-    validateStudentClass: function() {
-      const studentClass = this.student.class;
-      if(!studentClass) {
-        this.errors.class.hasError = true;
-        this.errors.class.message = "This field is required";
-      }
-    },
     resetValidation: function() {
       this.errors.questions.hasError = false;
       this.errors.questions.message = null;
@@ -143,17 +133,16 @@ var questions = new Vue({
       this.errors.email.message = null;
       this.errors.gender.hasError = false;
       this.errors.gender.message = null;
-      this.errors.class.hasError = false;
-      this.errors.class.message = null;
     },
     addToDB: function() {
       docRef.collection('responses').doc(this.student.email).set({
         results: this.results,
         student: this.student,
+        rawInputs: this.questionList,
         writtenAt: new Date()
       })
-      .then(function(doc) {
-          console.log("Document written with ID: ", doc.id);
+      .then(function() {
+          console.log("Document written ");
       })
       .catch(function(error) {
           console.error("Error adding document: ", error);

@@ -59,14 +59,17 @@
                   <label class="label">Responses from</label>
                 </div>
                 <div class="field-body">
-                  <div class="field">
-                    <div class="control">
+                  <div class="field has-addons">
+                    <div class="control is-expanded">
                         <div class="select is-medium is-fullwidth">
                             <select v-model="classOf" @change="retrieveResponsesFromDB()">
-                              <option value="ay2018-2019sem2">AY2018-2019 Semester 2</option>
+                              <option v-for="singleClass in allClasses" :value="singleClass">{{ singleClass.toUpperCase() }}</option>
                               <option value="all">All Classes</option>
                             </select>
                           </div>
+                    </div>
+                    <div class="control">
+                      <button type="button" class="button is-primary is-medium" @click="downloadCSV">Export to CSV</button>
                     </div>
                   </div>
                 </div>
