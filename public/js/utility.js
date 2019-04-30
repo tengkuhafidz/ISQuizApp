@@ -1,19 +1,3 @@
-// Initialize Firebase
-var config = {
-  apiKey: "AIzaSyDPehuY1uPr5-bJdUAMRL5ogX8khdY2aSQ",
-  authDomain: "isquizapp.firebaseapp.com",
-  databaseURL: "https://isquizapp.firebaseio.com",
-  projectId: "isquizapp",
-  storageBucket: "isquizapp.appspot.com",
-  messagingSenderId: "301458684734"
-};
-firebase.initializeApp(config);
-
-// Initialize Cloud Firestore through Firebase
-var db = firebase.firestore();
-const settings = { timestampsInSnapshots: true };
-db.settings(settings);
-
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
       e.preventDefault();

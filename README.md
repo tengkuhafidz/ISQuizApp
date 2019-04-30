@@ -9,7 +9,7 @@ It is running live [here](https://isquizapp.firebaseapp.com/admin).
 ## Running the Project
 No installation required.
 
-1. Go into the `public` folder
+1. Go into the `public` folder, and into the `admin` folder
 2. Open the `index.html` on the browser
 
 ## Deploying Changes  
