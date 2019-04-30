@@ -24,4 +24,4 @@ Changes will be reflected on the live site.
 ## Folder Structure
 The main folders in this project are:
 1. **public**: This is where the frontend web app codes are in. Aside from holding the different `questionnaire pages`, it also contains the `admin page` and `send-results page` (used by admin to manually send results to students).
-2. **cloud-functions**: This is where the server codes are in. Primarily used to send questionnaire results to students emails. This will be triggered whenever a questionnaire is completed and submitted, and when admin manually requests for it via the send-results page.
+2. **cloud-functions**: This is where the server codes are in. Primarily used to send questionnaire results to students emails. This will be triggered whenever a questionnaire is completed and submitted, and when admin manually requests for it via the `send-results` page.
